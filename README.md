@@ -1,6 +1,6 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.7.1**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.8.0**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
@@ -21,6 +21,8 @@ Também é possível abrir `index.html` diretamente no navegador.
 
 - Setas, WASD ou botões na tela: mover.
 - Espaço, Esc ou botão Pausar: pausar/continuar.
+- A contagem 3, 2, 1 aparece ao iniciar, reiniciar e retomar; a cobra só anda depois dela.
+- Sair da aba ou janela durante a contagem pausa o jogo.
 - Bater nas paredes ou no corpo encerra a partida.
 - Complete as 400 casas para vencer.
 - Três ritmos de jogo, recorde local por nível e ranking online por dificuldade.

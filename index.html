@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
   <meta name="theme-color" content="#020617">
-  <title>Cobrinha · v1.7.1</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/engine.js" defer></script>
-  <script src="js/renderer.js" defer></script>
-  <script src="js/ranking.js" defer></script>
-  <script src="js/game.js" defer></script>
-  <script src="js/welcome.js" defer></script>
+  <title>Cobrinha · v1.8.0</title>
+  <link rel="stylesheet" href="css/style.css?v=1.8.0">
+  <script src="js/engine.js?v=1.8.0" defer></script>
+  <script src="js/renderer.js?v=1.8.0" defer></script>
+  <script src="js/ranking.js?v=1.8.0" defer></script>
+  <script src="js/game.js?v=1.8.0" defer></script>
+  <script src="js/welcome.js?v=1.8.0" defer></script>
 </head>
 <body>
   <main>
@@ -39,7 +39,7 @@
         <p id="personalRank" class="hint"></p>
       </section>
       <button id="openWelcome" class="subtle about-button">Sobre o jogo e notas da versão</button>
-      <small>v1.7.1 · Feito por Samuel Henrique</small>
+      <small>v1.8.0 · Feito por Samuel Henrique</small>
     </section>
     <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
       <header class="game-header">
@@ -53,6 +53,11 @@
       </div>
       <div class="board">
         <canvas id="game" width="400" height="400" role="img" aria-label="Tabuleiro da cobrinha. Use as setas ou os controles abaixo para jogar.">Seu navegador precisa oferecer suporte a canvas para jogar.</canvas>
+        <div id="countdown" class="countdown" role="status" aria-live="polite" aria-atomic="true" hidden>
+          <p>Prepare-se</p>
+          <strong id="countdownNumber">3</strong>
+          <span>A cobrinha começa a andar depois do 1</span>
+        </div>
         <div id="overlay" role="dialog" aria-modal="false" aria-labelledby="overlayTitle" aria-describedby="overlayText" hidden>
           <h2 id="overlayTitle">Fim de jogo</h2>
           <p id="overlayText" aria-live="polite"></p>
@@ -76,53 +81,41 @@
     </section>
   </main>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle">
-    <div class="welcome-header">
-      <p class="eyebrow">BEM-VINDO À COBRINHA</p>
-      <button id="closeWelcome" class="subtle" aria-label="Fechar mensagem de boas-vindas">×</button>
+    <header class="welcome-header">
+      <div class="welcome-brand"><span class="welcome-icon" aria-hidden="true">🐍</span><div><p class="eyebrow">COBRINHA</p><span class="welcome-version">v1.8.0 · Um clássico entre amigos</span></div></div>
+      <button id="closeWelcome" class="welcome-close" aria-label="Fechar mensagem de boas-vindas">×</button>
+    </header>
+    <div class="welcome-tabs" role="tablist" aria-label="Informações do jogo">
+      <button id="aboutTab" class="welcome-tab" role="tab" aria-selected="true" aria-controls="aboutPanel">Sobre o jogo</button>
+      <button id="updatesTab" class="welcome-tab" role="tab" aria-selected="false" aria-controls="updatesPanel" tabindex="-1">Atualizações <span class="tab-dot" aria-hidden="true"></span></button>
     </div>
-    <div class="welcome-content">
-      <h2 id="welcomeTitle" tabindex="-1">Jogo feito por<br><span>Samuel Henrique</span></h2>
-      <p>Um clássico para se divertir e desafiar os amigos. Obrigado por jogar!</p>
-      <section class="feedback-card" aria-labelledby="feedbackTitle">
-        <h3 id="feedbackTitle">Sua opinião ajuda o jogo a crescer</h3>
-        <p>Tem sugestões de melhorias, críticas ou alguma ideia? Entre em contato.</p>
-        <p><strong>Encontrou um bug? Me avise!</strong> Conte o que aconteceu e, se puder, envie uma captura de tela e informe seu aparelho ou navegador.</p>
-        <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.7.1">samuelhenrique.santos44@gmail.com</a>
+    <div class="welcome-scroll">
+      <section id="aboutPanel" role="tabpanel" aria-labelledby="aboutTab">
+        <p class="creator-label">Jogo feito por</p>
+        <h2 id="welcomeTitle" tabindex="-1">Samuel Henrique<span aria-hidden="true">.</span></h2>
+        <p class="welcome-intro">Coma, cresça e desafie seus amigos.<br>Obrigado por fazer parte dessa brincadeira!</p>
+        <div class="feedback-card">
+          <span class="card-kicker">VAMOS MELHORAR JUNTOS</span>
+          <h3>Sua próxima ideia pode entrar no jogo.</h3>
+          <p>Sugestões, críticas ou um bug no caminho? Me avise. Se algo deu errado, conte o que aconteceu e qual aparelho você usou.</p>
+          <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.8.0"><span aria-hidden="true">✉</span> samuelhenrique.santos44@gmail.com <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="latest-update"><span class="update-symbol" aria-hidden="true">✦</span><div><strong>Agora dá tempo de se preparar.</strong><p>Contagem de 3, 2, 1 ao começar e voltar da pausa.</p><button id="viewUpdates" class="text-button">Ver novidades da versão →</button></div></div>
       </section>
-      <section class="release-notes" aria-labelledby="releaseTitle">
-        <h3 id="releaseTitle">Notas da versão</h3>
+      <section id="updatesPanel" class="release-notes" role="tabpanel" aria-labelledby="updatesTab" hidden>
+        <p class="card-kicker">O JOGO CONTINUA CRESCENDO</p>
+        <h2>O que mudou?</h2>
         <article class="release-current">
-          <div class="release-heading"><h4>v1.7.1</h4><span class="badge">Versão atual</span></div>
+          <div class="release-heading"><h3>v1.8.0</h3><span class="badge">Versão atual</span></div>
           <p class="release-date">22 de outubro de 2026</p>
-          <ul>
-            <li>Mensagem de boas-vindas com os créditos do criador.</li>
-            <li>Canal para enviar sugestões, críticas e avisos de bugs.</li>
-            <li>Histórico de atualizações disponível no menu.</li>
-          </ul>
+          <ul><li>Contagem regressiva ao iniciar, reiniciar e retomar a partida.</li><li>Trocar de aba ou janela interrompe a contagem e mantém o jogo pausado.</li><li>Boas-vindas mais compactas, com abas para créditos e atualizações.</li><li>Correção de estilos desatualizados na tela de boas-vindas.</li></ul>
         </article>
-        <details>
-          <summary>v1.7.0 · Paredes e competição entre amigos</summary>
-          <ul>
-            <li>Colisão nas paredes: encostar na borda encerra a partida.</li>
-            <li>Apelido lembrado no navegador e exibido durante o jogo.</li>
-            <li>Ranking online com Top 10 e sua posição, separado por dificuldade.</li>
-            <li>Melhor pontuação salva online e tentativa de reenvio se a conexão falhar.</li>
-            <li>Recordes separados das partidas antigas sem paredes.</li>
-          </ul>
-        </details>
-        <details>
-          <summary>v1.6.0 · Uma base para jogar em qualquer tela</summary>
-          <ul>
-            <li>Layout adaptável ao celular e controles por setas, WASD e toque.</li>
-            <li>Três dificuldades e recordes locais por nível.</li>
-            <li>Pausa manual e automática ao trocar de aba ou janela.</li>
-            <li>Correções na geração de comida e vitória ao completar o tabuleiro.</li>
-            <li>Primeira publicação do jogo para compartilhar com os amigos.</li>
-          </ul>
-        </details>
+        <details><summary>v1.7.1 <span>Créditos e contato</span></summary><ul><li>Créditos de Samuel Henrique e contato para sugestões e bugs.</li><li>Notas da versão disponíveis ao abrir o jogo e pelo menu.</li></ul></details>
+        <details><summary>v1.7.0 <span>Paredes e ranking online</span></summary><ul><li>Colisão com as paredes e apelido durante a partida.</li><li>Ranking Top 10 e posição pessoal por dificuldade.</li><li>Melhor pontuação salva online, com nova tentativa em caso de falha.</li></ul></details>
+        <details><summary>v1.6.0 <span>O jogo ganhou a internet</span></summary><ul><li>Layout adaptável, setas, WASD e controles por toque.</li><li>Três dificuldades, recordes locais e pausa automática.</li><li>Correções de comida e vitória ao completar o tabuleiro.</li></ul></details>
       </section>
     </div>
-    <div class="welcome-footer"><button id="enterGame" class="primary">Vamos jogar! 🐍</button></div>
+    <footer class="welcome-footer"><span>Seu próximo recorde está esperando.</span><button id="enterGame" class="primary">Vamos jogar <span aria-hidden="true">→</span></button></footer>
   </dialog>
 </body>
 </html>

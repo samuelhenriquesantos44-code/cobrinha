@@ -1,5 +1,13 @@
 # Histórico
 
+## 1.8.0
+
+- Adiciona contagem 3, 2, 1 antes de iniciar, reiniciar e retomar a partida.
+- Pausa a contagem ao sair da aba ou janela e cancela temporizadores antigos.
+- Redesenha as boas-vindas com abas Sobre o jogo e Atualizações.
+- Mantém o botão de jogar visível e a rolagem apenas no conteúdo da mensagem.
+- Versiona as URLs de CSS e JavaScript para evitar arquivos antigos em cache.
+
 ## 1.7.1
 
 - Exibe mensagem de boas-vindas com os créditos de Samuel Henrique ao abrir o jogo.

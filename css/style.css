@@ -62,33 +62,57 @@ input:focus-visible { outline: 3px solid #facc15; outline-offset: 3px; }
 
 .about-button { display: block; width: 100%; margin-bottom: 12px; font-size: 13px; }
 body.welcome-open { overflow: hidden; }
-#welcomeDialog { width: min(560px, calc(100% - 24px)); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid #315347; border-radius: 22px; color: #e2e8f0; background: #07101e; box-shadow: 0 24px 90px #0009; overflow-y: auto; }
-#welcomeDialog::backdrop { background: #020617d9; backdrop-filter: blur(5px); }
-.welcome-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px 0; }
-.welcome-header .eyebrow { margin: 0; font-size: 10px; }
-#closeWelcome { font-size: 26px; border-color: transparent; padding: 0; min-width: 44px; line-height: 1; }
-.welcome-content { padding: 4px 24px 20px; }
-#welcomeTitle { margin: 6px 0 14px; font-size: clamp(25px, 7vw, 34px); line-height: 1.25; letter-spacing: -1px; }
-#welcomeTitle span { color: #4ade80; }
+#welcomeDialog { width: min(640px, calc(100% - 28px)); max-width: none; max-height: min(740px, calc(100vh - 32px)); max-height: min(740px, calc(100dvh - 32px)); padding: 0; margin: auto; border: 1px solid #2c453f; border-radius: 24px; color: #e2e8f0; background: #09121f; box-shadow: 0 24px 100px #000a; overflow: hidden; }
+#welcomeDialog[open] { display: flex; flex-direction: column; }
+#welcomeDialog::backdrop { background: #020617d9; backdrop-filter: blur(7px); }
+.welcome-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 28px 18px; flex-shrink: 0; }
+.welcome-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.welcome-icon { display: grid; place-items: center; width: 46px; height: 46px; background: #123b2d; border: 1px solid #22583e; border-radius: 14px; font-size: 27px; flex-shrink: 0; }
+.welcome-brand .eyebrow { margin: 0 0 4px; font-size: 11px; letter-spacing: 2px; }
+.welcome-version { font-size: 11px; color: #94a3b8; line-height: 1.5; }
+.welcome-close { display: grid; place-items: center; min-width: 44px; width: 44px; height: 44px; padding: 0; background: #ffffff06; border: 1px solid #ffffff12; border-radius: 50%; font-size: 26px; color: #94a3b8; }
+.welcome-tabs { display: flex; gap: 24px; padding: 0 28px; border-bottom: 1px solid #ffffff12; flex-shrink: 0; }
+.welcome-tab { position: relative; display: flex; align-items: center; gap: 7px; padding: 10px 0 14px; border: 0; border-radius: 0; background: transparent; color: #94a3b8; font-size: 13px; }
+.welcome-tab:hover { background: transparent; color: #e2e8f0; }
+.welcome-tab[aria-selected="true"] { color: #86efac; font-weight: 600; }
+.welcome-tab[aria-selected="true"]::after { content: ''; position: absolute; height: 2px; background: #4ade80; bottom: -1px; left: 0; right: 0; }
+.tab-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; }
+.welcome-scroll { padding: 24px 28px; overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #334b45 transparent; }
+.creator-label { margin: 0 0 6px; color: #94a3b8; font-size: 13px; }
+#welcomeTitle { margin: 0; font-size: clamp(26px, 6.5vw, 36px); line-height: 1.15; letter-spacing: -1px; font-weight: 650; }
 #welcomeTitle:focus { outline: none; }
-.welcome-content > p { color: #94a3b8; font-size: 14px; }
-.feedback-card { border: 1px solid #24413a; border-radius: 14px; background: #14532d1c; padding: 16px; margin-top: 22px; }
-.welcome-content h3 { font-size: 17px; margin: 0 0 12px; }
-.feedback-card p, .release-notes li { font-size: 14px; line-height: 1.65; color: #b8c6d8; }
-.feedback-card p { margin: 10px 0; }
-.feedback-card strong { color: #e2e8f0; }
-.contact-link { display: inline-block; padding: 10px 0; color: #86efac; font-size: 14px; line-height: 1.6; text-underline-offset: 4px; overflow-wrap: anywhere; }
+#welcomeTitle span { color: #4ade80; }
+.welcome-intro { color: #a6b5c7; font-size: 14px; margin: 14px 0 22px; line-height: 1.7; }
+.feedback-card { border: 1px solid #24413a; border-radius: 16px; background: linear-gradient(120deg, #11382c55, #0b1e2155); padding: 20px; }
+.card-kicker { display: block; margin: 0 0 10px; color: #86efac; font-size: 9px; font-weight: 700; letter-spacing: 1.6px; }
+.feedback-card h3 { font-size: 17px; line-height: 1.4; margin: 0; letter-spacing: -.2px; }
+.feedback-card p { color: #a6b5c7; font-size: 13px; line-height: 1.7; margin: 10px 0 14px; }
+.contact-link { display: flex; align-items: center; gap: 8px; color: #86efac; font-size: 12px; line-height: 1.7; text-decoration: none; overflow-wrap: anywhere; }
+.contact-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .contact-link:focus-visible, summary:focus-visible { outline: 3px solid #facc15; outline-offset: 4px; border-radius: 4px; }
-.release-notes { margin-top: 26px; }
-.release-current { border-left: 2px solid #4ade80; padding-left: 16px; margin-top: 18px; }
+.latest-update { display: flex; gap: 13px; margin-top: 20px; }
+.update-symbol { color: #4ade80; font-size: 23px; }
+.latest-update strong { font-size: 13px; font-weight: 600; }
+.latest-update p { margin: 5px 0 2px; color: #94a3b8; font-size: 12px; line-height: 1.6; }
+.text-button { padding: 8px 0; min-height: 36px; border: 0; background: transparent; color: #86efac; font-size: 12px; }
+.text-button:hover { background: transparent; text-decoration: underline; text-underline-offset: 4px; }
+.release-notes h2 { margin: 0 0 22px; font-size: 27px; letter-spacing: -.6px; }
+.release-current { border-left: 2px solid #4ade80; padding-left: 16px; margin: 0 0 20px; }
 .release-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.release-heading h4 { font-size: 16px; margin: 0; }
-.release-date { color: #94a3b8; font-size: 12px; margin: 6px 0; }
-.release-notes ul { padding-left: 18px; margin: 10px 0 18px; }
+.release-heading h3 { font-size: 17px; margin: 0; }
+.release-heading .badge { font-size: 10px; }
+.release-date { color: #94a3b8; font-size: 11px; margin: 8px 0; }
+.release-notes ul { padding-left: 18px; margin: 12px 0 0; }
+.release-notes li { font-size: 13px; line-height: 1.7; color: #a6b5c7; }
 .release-notes li + li { margin-top: 6px; }
-.release-notes details { padding: 14px 0; border-top: 1px solid #243244; }
-.release-notes summary { cursor: pointer; font-size: 14px; line-height: 1.6; }
-.release-notes details ul { margin-bottom: 0; }
-.welcome-footer { position: sticky; bottom: 0; padding: 14px 24px; background: #07101ef5; border-top: 1px solid #243244; }
-#enterGame { width: 100%; }
-@media (max-width: 380px) { .welcome-content { padding-left: 16px; padding-right: 16px; } .welcome-header { padding-left: 16px; padding-right: 12px; } .welcome-footer { padding: 12px 16px; } }
+.release-notes details { padding: 16px 0; border-top: 1px solid #ffffff12; }
+.release-notes summary { cursor: pointer; font-size: 13px; line-height: 1.7; }
+.release-notes summary span { margin-left: 8px; color: #94a3b8; font-size: 12px; }
+.welcome-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 28px; border-top: 1px solid #ffffff12; background: #0b1523; flex-shrink: 0; }
+.welcome-footer > span { font-size: 11px; color: #94a3b8; }
+#enterGame { display: flex; justify-content: center; gap: 20px; align-items: center; font-size: 13px; padding: 12px 20px; white-space: nowrap; }
+.countdown { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #020617d9; text-align: center; }
+.countdown p { margin: 0; font-size: 14px; color: #bbf7d0; letter-spacing: 2px; text-transform: uppercase; }
+#countdownNumber { display: block; font-size: clamp(68px, 20vw, 108px); line-height: 1.4; font-weight: 750; color: #4ade80; text-shadow: 0 0 40px #22c55e44; }
+.countdown span { color: #94a3b8; font-size: 12px; line-height: 1.6; }
+@media (max-width: 440px) { .welcome-header { padding: 18px 18px 14px; } .welcome-tabs { padding: 0 18px; gap: 20px; } .welcome-scroll { padding: 22px 18px; } .feedback-card { padding: 16px; } .contact-link { font-size: 11px; } .welcome-footer { padding: 14px 18px; } .welcome-footer > span { display: none; } #enterGame { width: 100%; } .welcome-version { font-size: 10px; } }

@@ -8,6 +8,49 @@ let effects = { pulse: 0, eatAnimation: 0, particles: [] };
 let record = 0;
 let roundContext;
 let starting = false;
+let countdownTimer;
+let startSequence = 0;
+
+function cancelCountdown() {
+  clearTimeout(countdownTimer);
+  $('countdown').hidden = true;
+}
+
+function pauseGame() {
+  cancelCountdown();
+  clearInterval(timer);
+  state.status = 'paused';
+  $('pause').textContent = 'Continuar';
+  showOverlay('Jogo pausado', 'Quando estiver pronto, continuamos em 3, 2, 1.', 'Continuar');
+}
+
+function beginCountdown() {
+  cancelCountdown();
+  clearInterval(timer);
+  if (document.hidden) { pauseGame(); return; }
+  const currentGame = state;
+  state.status = 'countdown';
+  $('overlay').hidden = true;
+  $('countdown').hidden = false;
+  $('pause').textContent = 'Pausar';
+  $('pause').focus({ preventScroll: true });
+  $('game').scrollIntoView?.({ block: 'center', behavior: 'auto' });
+  let remaining = 3;
+  $('countdownNumber').textContent = remaining;
+  function next() {
+    if (state !== currentGame || state.status !== 'countdown') return;
+    remaining--;
+    if (remaining === 0) {
+      $('countdown').hidden = true;
+      state.status = 'running';
+      timer = setInterval(tick, speeds[difficulty]);
+      return;
+    }
+    $('countdownNumber').textContent = remaining;
+    countdownTimer = setTimeout(next, 1000);
+  }
+  countdownTimer = setTimeout(next, 1000);
+}
 
 function readRecord() {
   try { return Math.max(0, Number(localStorage.getItem(recordKey(difficulty))) || 0); }
@@ -29,12 +72,15 @@ async function startGame() {
   try { profile = typeof RankingClient !== 'undefined' ? RankingClient.profile($('nickname').value) : { nickname: 'Jogador' }; }
   catch (error) { $('profileError').textContent = error.message; $('nickname').focus(); return; }
   starting = true;
+  const requestId = ++startSequence;
   $('start').disabled = true;
   $('start').textContent = 'Preparando…';
   clearInterval(timer);
-  if (state?.status === 'running') state.status = 'paused';
+  cancelCountdown();
+  if (state && ['running', 'countdown'].includes(state.status)) state.status = 'paused';
   difficulty = $('difficulty').value;
   const round = typeof RankingClient !== 'undefined' ? await RankingClient.startRound(difficulty) : null;
+  if (requestId !== startSequence) return;
   if (typeof RankingClient !== 'undefined') RankingClient.begin(round);
   const random = round ? SnakeEngine.seededRandom(round.seed) : Math.random;
   roundContext = { round, profile, difficulty, random, moves: [] };
@@ -52,15 +98,14 @@ async function startGame() {
   $('level').textContent = $('difficulty').selectedOptions[0].textContent;
   updateScore();
   renderGame(state, effects);
-  $('pause').focus({ preventScroll: true });
-  timer = setInterval(tick, speeds[difficulty]);
+  beginCountdown();
   starting = false;
   $('start').disabled = false;
   $('start').textContent = 'Jogar';
 }
 
 function tick() {
-  if (state.status !== 'running') return;
+  if (state?.status !== 'running') return;
   if (roundContext.moves.length <= 24000) roundContext.moves.push(state.nextDir);
   const result = SnakeEngine.step(state, roundContext.random);
   effects.pulse += 0.15;
@@ -92,17 +137,9 @@ function showOverlay(title, text, action) {
 }
 
 function togglePause() {
-  if (!state || !['running', 'paused'].includes(state.status)) return;
-  if (state.status === 'running') {
-    state.status = 'paused';
-    $('pause').textContent = 'Continuar';
-    showOverlay('Jogo pausado', 'Respire. Sua partida está aqui.', 'Continuar');
-  } else {
-    state.status = 'running';
-    $('pause').textContent = 'Pausar';
-    $('overlay').hidden = true;
-    $('pause').focus({ preventScroll: true });
-  }
+  if (starting || !state || !['running', 'paused', 'countdown'].includes(state.status)) return;
+  if (state.status === 'paused') beginCountdown();
+  else pauseGame();
 }
 
 $('start').addEventListener('click', startGame);
@@ -110,6 +147,11 @@ $('restart').addEventListener('click', startGame);
 $('pause').addEventListener('click', togglePause);
 $('overlayAction').addEventListener('click', () => state.status === 'paused' ? togglePause() : startGame());
 $('back').addEventListener('click', () => {
+  startSequence++;
+  starting = false;
+  $('start').disabled = false;
+  $('start').textContent = 'Jogar';
+  cancelCountdown();
   clearInterval(timer);
   state = null;
   $('gameArea').hidden = true;
@@ -124,12 +166,12 @@ document.addEventListener('keydown', event => {
   const keys = { ArrowLeft: 'LEFT', ArrowRight: 'RIGHT', ArrowUp: 'UP', ArrowDown: 'DOWN', a: 'LEFT', d: 'RIGHT', w: 'UP', s: 'DOWN' };
   const direction = keys[event.key] || keys[event.key.toLowerCase()];
   if (direction) { event.preventDefault(); SnakeEngine.turn(state, direction); }
-  if ((event.code === 'Space' || event.key === 'Escape') && !event.repeat && ['running', 'paused'].includes(state.status)) {
+  if ((event.code === 'Space' || event.key === 'Escape') && !event.repeat && ['running', 'paused', 'countdown'].includes(state.status)) {
     event.preventDefault();
     togglePause();
   }
 });
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && state?.status === 'running') togglePause();
+  if (document.hidden && ['running', 'countdown'].includes(state?.status)) pauseGame();
 });
-window.addEventListener('blur', () => { if (state?.status === 'running') togglePause(); });
+window.addEventListener('blur', () => { if (['running', 'countdown'].includes(state?.status)) pauseGame(); });
