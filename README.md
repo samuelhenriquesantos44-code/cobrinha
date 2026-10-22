@@ -2,6 +2,8 @@
 
 Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.6.0**.
 
+[Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
+
 ## Jogar e desenvolver
 
 Com Node.js 18 ou superior instalado, execute:
@@ -44,8 +46,9 @@ pausa, navegação da interface, teclado e persistência dos recordes.
 3. Execute o workflow “Testar e publicar Cobrinha” ou envie um novo commit.
 4. O workflow testa o jogo e publica apenas `index.html`, `css/` e `js/`.
 
-O endereço público aparece no resultado do job de publicação. O workflow já está
-preparado; a conexão ao GitHub e a configuração do repositório ainda são necessárias.
+Neste repositório, a publicação por GitHub Actions já está configurada.
+Cada envio para `main` executa os testes e publica a versão aprovada.
+O endereço público também aparece no resultado do job de publicação.
 
 ## Próximas melhorias
 
