@@ -1,11 +1,13 @@
 const $ = id => document.getElementById(id);
 const speeds = { easy: 150, normal: 110, hard: 75 };
-const recordKey = difficulty => `cobrinha:record:${difficulty}`;
+const recordKey = difficulty => `cobrinha:walls-v2:record:${difficulty}`;
 let state;
 let timer;
 let difficulty = 'normal';
 let effects = { pulse: 0, eatAnimation: 0, particles: [] };
 let record = 0;
+let roundContext;
+let starting = false;
 
 function readRecord() {
   try { return Math.max(0, Number(localStorage.getItem(recordKey(difficulty))) || 0); }
@@ -21,11 +23,26 @@ function updateScore() {
   $('record').textContent = record;
 }
 
-function startGame() {
+async function startGame() {
+  if (starting) return;
+  let profile;
+  try { profile = typeof RankingClient !== 'undefined' ? RankingClient.profile($('nickname').value) : { nickname: 'Jogador' }; }
+  catch (error) { $('profileError').textContent = error.message; $('nickname').focus(); return; }
+  starting = true;
+  $('start').disabled = true;
+  $('start').textContent = 'Preparando…';
   clearInterval(timer);
+  if (state?.status === 'running') state.status = 'paused';
   difficulty = $('difficulty').value;
+  const round = typeof RankingClient !== 'undefined' ? await RankingClient.startRound(difficulty) : null;
+  if (typeof RankingClient !== 'undefined') RankingClient.begin(round);
+  const random = round ? SnakeEngine.seededRandom(round.seed) : Math.random;
+  roundContext = { round, profile, difficulty, random, moves: [] };
   record = readRecord();
-  state = SnakeEngine.createGame();
+  state = SnakeEngine.createGame(random);
+  $('playerName').textContent = profile.nickname;
+  $('profileError').textContent = '';
+  $('saveStatus').textContent = round ? 'Partida conectada ao ranking' : 'Sem conexão com o ranking. Recorde salvo neste aparelho.';
   effects = { pulse: 0, eatAnimation: 0, particles: [] };
   $('menu').hidden = true;
   $('gameArea').hidden = false;
@@ -37,11 +54,15 @@ function startGame() {
   renderGame(state, effects);
   $('pause').focus({ preventScroll: true });
   timer = setInterval(tick, speeds[difficulty]);
+  starting = false;
+  $('start').disabled = false;
+  $('start').textContent = 'Jogar';
 }
 
 function tick() {
   if (state.status !== 'running') return;
-  const result = SnakeEngine.step(state);
+  if (roundContext.moves.length <= 24000) roundContext.moves.push(state.nextDir);
+  const result = SnakeEngine.step(state, roundContext.random);
   effects.pulse += 0.15;
   effects.eatAnimation = Math.max(0, effects.eatAnimation - 1);
   effects.particles = effects.particles.filter(p => --p.life > 0);
@@ -57,7 +78,8 @@ function tick() {
   if (state.status === 'won' || state.status === 'lost') {
     clearInterval(timer);
     $('pause').disabled = true;
-    showOverlay(state.status === 'won' ? 'Você venceu! 🏆' : 'Fim de jogo', `Pontuação: ${state.score}`, 'Jogar novamente');
+    showOverlay(state.status === 'won' ? 'Você venceu! 🏆' : state.reason === 'wall' ? 'Bateu na parede!' : 'Bateu na cobrinha!', `Pontuação: ${state.score}`, 'Jogar novamente');
+    if (typeof RankingClient !== 'undefined') RankingClient.finish(roundContext, state.score);
   }
 }
 

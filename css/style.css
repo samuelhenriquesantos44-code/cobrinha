@@ -39,3 +39,23 @@ canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; }
 .subtle { background: transparent; color: #94a3b8; }
 .hint { margin: 14px 0 0; }
 @media (max-width: 380px) { body { padding: 10px 8px; } .panel { padding: 16px; border-radius: 18px; } }
+
+input { width: 100%; min-height: 44px; padding: 12px 14px; border-radius: 12px; border: 1px solid #334155; font: inherit; background: #0f172a; color: #f1f5f9; }
+input:focus-visible { outline: 3px solid #facc15; outline-offset: 3px; }
+.error { color: #fca5a5; font-size: 13px; margin: 8px 0 0; }
+.error:empty { display: none; }
+.player-line { text-align: left; font-size: 12px; color: #94a3b8; margin-bottom: 0; }
+.player-line strong { color: #86efac; overflow-wrap: anywhere; }
+.leaderboard { border-top: 1px solid #24413a; margin: 24px 0; padding-top: 14px; text-align: left; }
+.ranking-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ranking-heading h2 { font-size: 20px; margin: 0; }
+#rankingStatus { font-size: 13px; color: #94a3b8; }
+#rankingList { padding: 0; list-style: none; margin: 14px 0; counter-reset: ranking; }
+#rankingList li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; font-size: 14px; counter-increment: ranking; }
+#rankingList li:nth-child(odd) { background: #0f172a; }
+#rankingList li span { overflow-wrap: anywhere; }
+#rankingList li span::before { content: counter(ranking) ". "; color: #94a3b8; }
+#rankingList li.mine { outline: 1px solid #4ade80; }
+#rankingList strong { white-space: nowrap; color: #86efac; }
+#refreshRanking { font-size: 24px; }
+#saveStatus { overflow-wrap: anywhere; }

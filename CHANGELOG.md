@@ -1,5 +1,15 @@
 # Histórico
 
+## 1.7.0
+
+- Adiciona colisão com paredes e mensagem específica de derrota.
+- Adiciona apelido e identidade lembrados no navegador, sem login.
+- Publica ranking online Top 10 e posição pessoal por dificuldade.
+- Persiste o melhor resultado de cada jogador em banco D1.
+- Valida os movimentos e calcula a pontuação no servidor, com proteção contra reenvio.
+- Preserva resultados pendentes para tentar novamente se o envio falhar.
+- Separa os recordes com paredes dos recordes da versão anterior.
+
 ## 1.6.0
 
 - Corrige comida sobre a cabeça e trata vitória ao completar o tabuleiro.

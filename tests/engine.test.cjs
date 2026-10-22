@@ -11,12 +11,14 @@ test('comida nunca ocupa o corpo, inclusive depois de crescer', () => {
   assert.equal(game.snake.length, 2);
   assert.ok(!game.snake.some(p => p.x === game.food.x && p.y === game.food.y));
 });
-test('atravessa as quatro bordas', () => {
+test('colisão nas quatro paredes encerra a partida sem atravessar', () => {
   for (const [dir, x, y, ex, ey] of [['RIGHT',380,200,0,200],['LEFT',0,200,380,200],['UP',200,0,200,380],['DOWN',200,380,200,0]]) {
     const game = createGame();
     Object.assign(game, { snake: [{x,y}], dir, nextDir: dir, food: {x:100,y:100} });
     step(game);
-    assert.deepEqual(game.snake[0], {x:ex,y:ey});
+    assert.equal(game.status, 'lost');
+    assert.equal(game.reason, 'wall');
+    assert.deepEqual(game.snake[0], {x,y});
   }
 });
 test('impede reversão mesmo com múltiplas teclas entre movimentos', () => {

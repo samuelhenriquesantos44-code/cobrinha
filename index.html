@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
   <meta name="theme-color" content="#020617">
-  <title>Cobrinha · v1.6.0</title>
+  <title>Cobrinha · v1.7.0</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/engine.js" defer></script>
   <script src="js/renderer.js" defer></script>
+  <script src="js/ranking.js" defer></script>
   <script src="js/game.js" defer></script>
 </head>
 <body>
@@ -17,6 +18,10 @@
       <p class="eyebrow">UM CLÁSSICO, MAIS UMA PARTIDA</p>
       <h1 id="gameTitle">🐍 Cobrinha</h1>
       <p>Coma, cresça e supere seu recorde.</p>
+      <label for="nickname">Seu apelido</label>
+      <input id="nickname" type="text" minlength="3" maxlength="20" autocomplete="nickname" placeholder="Como seus amigos te chamam?" aria-describedby="profileHint profileError">
+      <p id="profileHint" class="hint">Apelido e pontos ficam públicos no ranking. Sua identidade fica neste aparelho.</p>
+      <p id="profileError" class="error" role="alert"></p>
       <label for="difficulty">Escolha o ritmo</label>
       <select id="difficulty">
         <option value="easy">Tranquilo</option>
@@ -24,14 +29,22 @@
         <option value="hard">Acelerado</option>
       </select>
       <button id="start" class="primary">Jogar</button>
-      <p class="instructions">Use as setas ou WASD no teclado, ou os botões na tela.<br>Espaço ou Esc para pausar. As bordas levam ao outro lado!</p>
-      <small>v1.6.0 · Feito para jogar de novo</small>
+      <p class="instructions">Use as setas ou WASD no teclado, ou os botões na tela.<br>Espaço ou Esc para pausar. Cuidado: bater nas paredes encerra a partida!<br>Termine a partida com pontos para entrar no ranking.</p>
+      <section class="leaderboard" aria-labelledby="rankingTitle">
+        <div class="ranking-heading"><h2 id="rankingTitle">🏆 Entre amigos</h2><button id="refreshRanking" class="subtle" aria-label="Atualizar ranking">↻</button></div>
+        <p class="hint">Top 10 · <span id="rankingLevel">Clássico</span> · Com paredes</p>
+        <p id="rankingStatus" role="status" aria-live="polite">Carregando ranking…</p>
+        <ol id="rankingList"></ol>
+        <p id="personalRank" class="hint"></p>
+      </section>
+      <small>v1.7.0 · Feito para jogar de novo</small>
     </section>
     <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
       <header class="game-header">
         <h1>🐍 Cobrinha</h1>
         <span id="level" class="badge">Clássico</span>
       </header>
+      <p class="player-line">Jogando como <strong id="playerName"></strong> · Com paredes</p>
       <div class="stats">
         <div>Pontos <strong id="score">0</strong></div>
         <div>Recorde <strong id="record">0</strong></div>
@@ -55,6 +68,8 @@
         <button id="restart">Reiniciar</button>
         <button id="back" class="subtle">Menu</button>
       </div>
+      <p id="saveStatus" class="hint" role="status" aria-live="polite"></p>
+      <button id="retryScore" class="subtle" hidden>Tentar salvar no ranking</button>
       <p class="hint">Setas / WASD · Espaço para pausar</p>
     </section>
   </main>

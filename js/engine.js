@@ -6,6 +6,11 @@
   const opposite = { LEFT: 'RIGHT', RIGHT: 'LEFT', UP: 'DOWN', DOWN: 'UP' };
   const same = (a, b) => a.x === b.x && a.y === b.y;
 
+  function seededRandom(seed) {
+    let value = seed >>> 0;
+    return () => { value = (Math.imul(value, 1664525) + 1013904223) >>> 0; return value / 4294967296; };
+  }
+
   function createFood(snake, random = Math.random) {
     const occupied = new Set(snake.map(p => `${p.x},${p.y}`));
     const free = [];
@@ -33,12 +38,18 @@
     state.dir = state.nextDir;
     const [dx, dy] = vectors[state.dir];
     const edge = SIZE * CELL;
-    const head = { x: (state.snake[0].x + dx * CELL + edge) % edge, y: (state.snake[0].y + dy * CELL + edge) % edge };
+    const head = { x: state.snake[0].x + dx * CELL, y: state.snake[0].y + dy * CELL };
+    if (head.x < 0 || head.x >= edge || head.y < 0 || head.y >= edge) {
+      state.status = 'lost';
+      state.reason = 'wall';
+      return { ate: false };
+    }
     const ate = state.food !== null && same(head, state.food);
     // A cauda sai da posição atual quando a cobra não está crescendo.
     const body = ate ? state.snake : state.snake.slice(0, -1);
     if (body.some(p => same(p, head))) {
       state.status = 'lost';
+      state.reason = 'body';
       return { ate: false };
     }
     if (!ate) state.snake.pop();
@@ -51,7 +62,7 @@
     return { ate, head };
   }
 
-  const engine = { SIZE, CELL, createFood, createGame, turn, step };
+  const engine = { SIZE, CELL, createFood, createGame, turn, step, seededRandom };
   if (typeof module !== 'undefined' && module.exports) module.exports = engine;
   else root.SnakeEngine = engine;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

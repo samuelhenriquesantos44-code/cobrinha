@@ -33,9 +33,9 @@ function setup(blockStorage = false) {
   return { context, element, events, storage, run: code => vm.runInContext(code, context) };
 }
 
-test('iniciar, pausar, continuar e reiniciar atualizam a interface', () => {
+test('iniciar, pausar, continuar e reiniciar atualizam a interface', async () => {
   const ui = setup();
-  ui.element('start').click();
+  await ui.element('start').click();
   assert.equal(ui.element('menu').hidden, true);
   assert.equal(ui.element('gameArea').hidden, false);
   ui.element('pause').click();
@@ -44,15 +44,15 @@ test('iniciar, pausar, continuar e reiniciar atualizam a interface', () => {
   ui.element('overlayAction').click();
   assert.equal(ui.run('state.status'), 'running');
   assert.equal(ui.element('overlay').hidden, true);
-  ui.element('restart').click();
+  await ui.element('restart').click();
   assert.equal(ui.element('score').textContent, 0);
   ui.element('back').click();
   assert.equal(ui.element('gameArea').hidden, true);
   assert.equal(ui.element('menu').hidden, false);
 });
 
-test('troca de aba e janela pausa sem retomar automaticamente', () => {
-  const ui = setup(); ui.element('start').click();
+test('troca de aba e janela pausa sem retomar automaticamente', async () => {
+  const ui = setup(); await ui.element('start').click();
   ui.context.document.hidden = true;
   ui.events.visibilitychange();
   assert.equal(ui.run('state.status'), 'paused');
@@ -64,23 +64,23 @@ test('troca de aba e janela pausa sem retomar automaticamente', () => {
   assert.equal(ui.run('state.status'), 'paused');
 });
 
-test('pontuação e recorde persistem por nível; armazenamento bloqueado não interrompe o jogo', () => {
+test('pontuação e recorde persistem por nível; armazenamento bloqueado não interrompe o jogo', async () => {
   for (const blocked of [false, true]) {
-    const ui = setup(blocked); ui.element('start').click();
+    const ui = setup(blocked); await ui.element('start').click();
     ui.run('state.food = {x:220,y:200}; tick();');
     assert.equal(ui.element('score').textContent, 1);
     assert.equal(ui.element('record').textContent, 1);
-    if (!blocked) assert.equal(ui.storage.get('cobrinha:record:normal'), '1');
-    ui.element('restart').click();
+    if (!blocked) assert.equal(ui.storage.get('cobrinha:walls-v2:record:normal'), '1');
+    await ui.element('restart').click();
     assert.equal(ui.element('record').textContent, blocked ? 0 : 1);
     ui.element('difficulty').value = 'easy';
-    ui.element('restart').click();
+    await ui.element('restart').click();
     assert.equal(ui.element('record').textContent, 0);
   }
 });
 
-test('setas bloqueiam rolagem e espaço alterna pausa', () => {
-  const ui = setup(); ui.element('start').click();
+test('setas bloqueiam rolagem e espaço alterna pausa', async () => {
+  const ui = setup(); await ui.element('start').click();
   let prevented = 0;
   const key = (value, code) => ui.events.keydown({key:value, code, target:{tagName:'BUTTON'}, preventDefault() { prevented++; }});
   key('ArrowUp', 'ArrowUp');
