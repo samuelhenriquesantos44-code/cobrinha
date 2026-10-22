@@ -1,8 +1,12 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.7.0**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.7.1**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
+
+Ao abrir, o jogo mostra os créditos de Samuel Henrique, o canal para sugestões e
+relatos de bugs e as notas da versão. O botão “Sobre o jogo e notas da versão”
+permite consultar essas informações novamente no menu.
 
 ## Jogar e desenvolver
 

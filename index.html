@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
   <meta name="theme-color" content="#020617">
-  <title>Cobrinha · v1.7.0</title>
+  <title>Cobrinha · v1.7.1</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/engine.js" defer></script>
   <script src="js/renderer.js" defer></script>
   <script src="js/ranking.js" defer></script>
   <script src="js/game.js" defer></script>
+  <script src="js/welcome.js" defer></script>
 </head>
 <body>
   <main>
@@ -37,7 +38,8 @@
         <ol id="rankingList"></ol>
         <p id="personalRank" class="hint"></p>
       </section>
-      <small>v1.7.0 · Feito para jogar de novo</small>
+      <button id="openWelcome" class="subtle about-button">Sobre o jogo e notas da versão</button>
+      <small>v1.7.1 · Feito por Samuel Henrique</small>
     </section>
     <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
       <header class="game-header">
@@ -73,5 +75,54 @@
       <p class="hint">Setas / WASD · Espaço para pausar</p>
     </section>
   </main>
+  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle">
+    <div class="welcome-header">
+      <p class="eyebrow">BEM-VINDO À COBRINHA</p>
+      <button id="closeWelcome" class="subtle" aria-label="Fechar mensagem de boas-vindas">×</button>
+    </div>
+    <div class="welcome-content">
+      <h2 id="welcomeTitle" tabindex="-1">Jogo feito por<br><span>Samuel Henrique</span></h2>
+      <p>Um clássico para se divertir e desafiar os amigos. Obrigado por jogar!</p>
+      <section class="feedback-card" aria-labelledby="feedbackTitle">
+        <h3 id="feedbackTitle">Sua opinião ajuda o jogo a crescer</h3>
+        <p>Tem sugestões de melhorias, críticas ou alguma ideia? Entre em contato.</p>
+        <p><strong>Encontrou um bug? Me avise!</strong> Conte o que aconteceu e, se puder, envie uma captura de tela e informe seu aparelho ou navegador.</p>
+        <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.7.1">samuelhenrique.santos44@gmail.com</a>
+      </section>
+      <section class="release-notes" aria-labelledby="releaseTitle">
+        <h3 id="releaseTitle">Notas da versão</h3>
+        <article class="release-current">
+          <div class="release-heading"><h4>v1.7.1</h4><span class="badge">Versão atual</span></div>
+          <p class="release-date">22 de outubro de 2026</p>
+          <ul>
+            <li>Mensagem de boas-vindas com os créditos do criador.</li>
+            <li>Canal para enviar sugestões, críticas e avisos de bugs.</li>
+            <li>Histórico de atualizações disponível no menu.</li>
+          </ul>
+        </article>
+        <details>
+          <summary>v1.7.0 · Paredes e competição entre amigos</summary>
+          <ul>
+            <li>Colisão nas paredes: encostar na borda encerra a partida.</li>
+            <li>Apelido lembrado no navegador e exibido durante o jogo.</li>
+            <li>Ranking online com Top 10 e sua posição, separado por dificuldade.</li>
+            <li>Melhor pontuação salva online e tentativa de reenvio se a conexão falhar.</li>
+            <li>Recordes separados das partidas antigas sem paredes.</li>
+          </ul>
+        </details>
+        <details>
+          <summary>v1.6.0 · Uma base para jogar em qualquer tela</summary>
+          <ul>
+            <li>Layout adaptável ao celular e controles por setas, WASD e toque.</li>
+            <li>Três dificuldades e recordes locais por nível.</li>
+            <li>Pausa manual e automática ao trocar de aba ou janela.</li>
+            <li>Correções na geração de comida e vitória ao completar o tabuleiro.</li>
+            <li>Primeira publicação do jogo para compartilhar com os amigos.</li>
+          </ul>
+        </details>
+      </section>
+    </div>
+    <div class="welcome-footer"><button id="enterGame" class="primary">Vamos jogar! 🐍</button></div>
+  </dialog>
 </body>
 </html>

@@ -1,5 +1,12 @@
 # Histórico
 
+## 1.7.1
+
+- Exibe mensagem de boas-vindas com os créditos de Samuel Henrique ao abrir o jogo.
+- Adiciona contato para sugestões, críticas e relatos de bugs.
+- Mostra notas da versão atual e das versões anteriores.
+- Permite consultar as informações novamente pelo menu.
+
 ## 1.7.0
 
 - Adiciona colisão com paredes e mensagem específica de derrota.
