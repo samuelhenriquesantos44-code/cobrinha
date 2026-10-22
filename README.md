@@ -1,6 +1,6 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.8.0**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.8.1**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
@@ -19,7 +19,9 @@ npm start
 Abra http://127.0.0.1:8080. Não precisa instalar dependências.
 Também é possível abrir `index.html` diretamente no navegador.
 
-- Setas, WASD ou botões na tela: mover.
+- Setas, WASD, botões na tela ou deslize no tabuleiro: mover.
+- Cada deslize muda uma direção. Curvas rápidas são guardadas em sequência, com até duas direções pendentes.
+- As setas respondem ao encostar, e você pode preparar a direção durante a contagem.
 - Espaço, Esc ou botão Pausar: pausar/continuar.
 - A contagem 3, 2, 1 aparece ao iniciar, reiniciar e retomar; a cobra só anda depois dela.
 - Sair da aba ou janela durante a contagem pausa o jogo.
@@ -79,5 +81,5 @@ O endereço da API está definido em `js/ranking.js`. Consulte o README do servi
 ## Próximas melhorias
 
 - Sons opcionais.
-- Controles por gesto e testes em aparelhos reais.
+- Mais testes em aparelhos reais.
 - Salas privadas e recuperação de identidade por login, se desejado.

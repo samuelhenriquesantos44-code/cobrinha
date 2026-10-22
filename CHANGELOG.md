@@ -1,5 +1,13 @@
 # Histórico
 
+## 1.8.1
+
+- Adiciona deslize no tabuleiro e resposta das setas ao encostar o dedo.
+- Preserva duas curvas rápidas em sequência, sem inverter a cobra.
+- Permite preparar direções durante a contagem regressiva.
+- Impede rolagem e seleção acidentais na área dos controles e do tabuleiro.
+- Amplia os botões e compacta o tabuleiro em telas pequenas.
+
 ## 1.8.0
 
 - Adiciona contagem 3, 2, 1 antes de iniciar, reiniciar e retomar a partida.

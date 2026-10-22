@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
   <meta name="theme-color" content="#020617">
-  <title>Cobrinha · v1.8.0</title>
+  <title>Cobrinha · v1.8.1</title>
   <link rel="stylesheet" href="css/style.css?v=1.8.0">
   <script src="js/engine.js?v=1.8.0" defer></script>
   <script src="js/renderer.js?v=1.8.0" defer></script>
@@ -30,7 +30,7 @@
         <option value="hard">Acelerado</option>
       </select>
       <button id="start" class="primary">Jogar</button>
-      <p class="instructions">Use as setas ou WASD no teclado, ou os botões na tela.<br>Espaço ou Esc para pausar. Cuidado: bater nas paredes encerra a partida!<br>Termine a partida com pontos para entrar no ranking.</p>
+      <p class="instructions">Deslize no tabuleiro, toque nas setas ou use WASD no teclado.<br>Espaço ou Esc para pausar. Cuidado: bater nas paredes encerra a partida!<br>Termine a partida com pontos para entrar no ranking.</p>
       <section class="leaderboard" aria-labelledby="rankingTitle">
         <div class="ranking-heading"><h2 id="rankingTitle">🏆 Entre amigos</h2><button id="refreshRanking" class="subtle" aria-label="Atualizar ranking">↻</button></div>
         <p class="hint">Top 10 · <span id="rankingLevel">Clássico</span> · Com paredes</p>
@@ -39,7 +39,7 @@
         <p id="personalRank" class="hint"></p>
       </section>
       <button id="openWelcome" class="subtle about-button">Sobre o jogo e notas da versão</button>
-      <small>v1.8.0 · Feito por Samuel Henrique</small>
+      <small>v1.8.1 · Feito por Samuel Henrique</small>
     </section>
     <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
       <header class="game-header">
@@ -51,8 +51,8 @@
         <div>Pontos <strong id="score">0</strong></div>
         <div>Recorde <strong id="record">0</strong></div>
       </div>
-      <div class="board">
-        <canvas id="game" width="400" height="400" role="img" aria-label="Tabuleiro da cobrinha. Use as setas ou os controles abaixo para jogar.">Seu navegador precisa oferecer suporte a canvas para jogar.</canvas>
+      <div id="board" class="board">
+        <canvas id="game" width="400" height="400" role="img" aria-label="Tabuleiro da cobrinha. Deslize no tabuleiro ou use as setas para jogar.">Seu navegador precisa oferecer suporte a canvas para jogar.</canvas>
         <div id="countdown" class="countdown" role="status" aria-live="polite" aria-atomic="true" hidden>
           <p>Prepare-se</p>
           <strong id="countdownNumber">3</strong>
@@ -65,10 +65,10 @@
         </div>
       </div>
       <nav id="controls" aria-label="Direção da cobrinha">
-        <button class="ctrl up" data-dir="UP" aria-label="Cima">↑</button>
-        <button class="ctrl left" data-dir="LEFT" aria-label="Esquerda">←</button>
-        <button class="ctrl down" data-dir="DOWN" aria-label="Baixo">↓</button>
-        <button class="ctrl right" data-dir="RIGHT" aria-label="Direita">→</button>
+        <button type="button" class="ctrl up" data-dir="UP" aria-label="Cima">↑</button>
+        <button type="button" class="ctrl left" data-dir="LEFT" aria-label="Esquerda">←</button>
+        <button type="button" class="ctrl down" data-dir="DOWN" aria-label="Baixo">↓</button>
+        <button type="button" class="ctrl right" data-dir="RIGHT" aria-label="Direita">→</button>
       </nav>
       <div class="actions">
         <button id="pause">Pausar</button>
@@ -77,12 +77,12 @@
       </div>
       <p id="saveStatus" class="hint" role="status" aria-live="polite"></p>
       <button id="retryScore" class="subtle" hidden>Tentar salvar no ranking</button>
-      <p class="hint">Setas / WASD · Espaço para pausar</p>
+      <p class="hint">Deslize no tabuleiro ou use as setas · Espaço para pausar</p>
     </section>
   </main>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle">
     <header class="welcome-header">
-      <div class="welcome-brand"><span class="welcome-icon" aria-hidden="true">🐍</span><div><p class="eyebrow">COBRINHA</p><span class="welcome-version">v1.8.0 · Um clássico entre amigos</span></div></div>
+      <div class="welcome-brand"><span class="welcome-icon" aria-hidden="true">🐍</span><div><p class="eyebrow">COBRINHA</p><span class="welcome-version">v1.8.1 · Um clássico entre amigos</span></div></div>
       <button id="closeWelcome" class="welcome-close" aria-label="Fechar mensagem de boas-vindas">×</button>
     </header>
     <div class="welcome-tabs" role="tablist" aria-label="Informações do jogo">
@@ -98,18 +98,19 @@
           <span class="card-kicker">VAMOS MELHORAR JUNTOS</span>
           <h3>Sua próxima ideia pode entrar no jogo.</h3>
           <p>Sugestões, críticas ou um bug no caminho? Me avise. Se algo deu errado, conte o que aconteceu e qual aparelho você usou.</p>
-          <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.8.0"><span aria-hidden="true">✉</span> samuelhenrique.santos44@gmail.com <span aria-hidden="true">↗</span></a>
+          <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.8.1"><span aria-hidden="true">✉</span> samuelhenrique.santos44@gmail.com <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="latest-update"><span class="update-symbol" aria-hidden="true">✦</span><div><strong>Agora dá tempo de se preparar.</strong><p>Contagem de 3, 2, 1 ao começar e voltar da pausa.</p><button id="viewUpdates" class="text-button">Ver novidades da versão →</button></div></div>
+        <div class="latest-update"><span class="update-symbol" aria-hidden="true">✦</span><div><strong>Seu dedo escolhe o caminho.</strong><p>Deslize no tabuleiro ou toque nas setas para virar.</p><button id="viewUpdates" class="text-button">Ver novidades da versão →</button></div></div>
       </section>
       <section id="updatesPanel" class="release-notes" role="tabpanel" aria-labelledby="updatesTab" hidden>
         <p class="card-kicker">O JOGO CONTINUA CRESCENDO</p>
         <h2>O que mudou?</h2>
         <article class="release-current">
-          <div class="release-heading"><h3>v1.8.0</h3><span class="badge">Versão atual</span></div>
+          <div class="release-heading"><h3>v1.8.1</h3><span class="badge">Versão atual</span></div>
           <p class="release-date">22 de outubro de 2026</p>
-          <ul><li>Contagem regressiva ao iniciar, reiniciar e retomar a partida.</li><li>Trocar de aba ou janela interrompe a contagem e mantém o jogo pausado.</li><li>Boas-vindas mais compactas, com abas para créditos e atualizações.</li><li>Correção de estilos desatualizados na tela de boas-vindas.</li></ul>
+          <ul><li>Controle por deslize no próprio tabuleiro.</li><li>Setas respondem ao encostar o dedo e preservam duas curvas rápidas em sequência.</li><li>Direções podem ser preparadas durante a contagem regressiva.</li><li>Botões maiores no celular e menos rolagem ao jogar.</li></ul>
         </article>
+        <details><summary>v1.8.0 <span>Prepare-se para jogar</span></summary><ul><li>Contagem 3, 2, 1 antes de começar, reiniciar ou retomar.</li><li>Boas-vindas com abas e botão de jogar sempre visível.</li><li>Correção de estilos desatualizados no navegador.</li></ul></details>
         <details><summary>v1.7.1 <span>Créditos e contato</span></summary><ul><li>Créditos de Samuel Henrique e contato para sugestões e bugs.</li><li>Notas da versão disponíveis ao abrir o jogo e pelo menu.</li></ul></details>
         <details><summary>v1.7.0 <span>Paredes e ranking online</span></summary><ul><li>Colisão com as paredes e apelido durante a partida.</li><li>Ranking Top 10 e posição pessoal por dificuldade.</li><li>Melhor pontuação salva online, com nova tentativa em caso de falha.</li></ul></details>
         <details><summary>v1.6.0 <span>O jogo ganhou a internet</span></summary><ul><li>Layout adaptável, setas, WASD e controles por toque.</li><li>Três dificuldades, recordes locais e pausa automática.</li><li>Correções de comida e vitória ao completar o tabuleiro.</li></ul></details>

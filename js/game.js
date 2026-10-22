@@ -10,6 +10,21 @@ let roundContext;
 let starting = false;
 let countdownTimer;
 let startSequence = 0;
+let directionQueue = [];
+let swipeGesture = null;
+
+function resetControls() {
+  directionQueue = [];
+  swipeGesture = null;
+}
+
+function queueDirection(direction) {
+  if (starting || !state || !['running', 'countdown'].includes(state.status)) return;
+  const opposite = { LEFT: 'RIGHT', RIGHT: 'LEFT', UP: 'DOWN', DOWN: 'UP' };
+  const previous = directionQueue.at(-1) || state.nextDir;
+  if (!opposite[direction] || direction === previous || direction === opposite[previous] || directionQueue.length >= 2) return;
+  directionQueue.push(direction);
+}
 
 function cancelCountdown() {
   clearTimeout(countdownTimer);
@@ -17,6 +32,7 @@ function cancelCountdown() {
 }
 
 function pauseGame() {
+  resetControls();
   cancelCountdown();
   clearInterval(timer);
   state.status = 'paused';
@@ -77,6 +93,7 @@ async function startGame() {
   $('start').textContent = 'Preparando…';
   clearInterval(timer);
   cancelCountdown();
+  resetControls();
   if (state && ['running', 'countdown'].includes(state.status)) state.status = 'paused';
   difficulty = $('difficulty').value;
   const round = typeof RankingClient !== 'undefined' ? await RankingClient.startRound(difficulty) : null;
@@ -106,6 +123,7 @@ async function startGame() {
 
 function tick() {
   if (state?.status !== 'running') return;
+  if (directionQueue.length) SnakeEngine.turn(state, directionQueue.shift());
   if (roundContext.moves.length <= 24000) roundContext.moves.push(state.nextDir);
   const result = SnakeEngine.step(state, roundContext.random);
   effects.pulse += 0.15;
@@ -121,6 +139,7 @@ function tick() {
   }
   renderGame(state, effects);
   if (state.status === 'won' || state.status === 'lost') {
+    resetControls();
     clearInterval(timer);
     $('pause').disabled = true;
     showOverlay(state.status === 'won' ? 'Você venceu! 🏆' : state.reason === 'wall' ? 'Bateu na parede!' : 'Bateu na cobrinha!', `Pontuação: ${state.score}`, 'Jogar novamente');
@@ -152,6 +171,7 @@ $('back').addEventListener('click', () => {
   $('start').disabled = false;
   $('start').textContent = 'Jogar';
   cancelCountdown();
+  resetControls();
   clearInterval(timer);
   state = null;
   $('gameArea').hidden = true;
@@ -159,13 +179,43 @@ $('back').addEventListener('click', () => {
   $('start').focus();
 });
 document.querySelectorAll('[data-dir]').forEach(button => {
-  button.addEventListener('click', () => { if (state) SnakeEngine.turn(state, button.dataset.dir); });
+  button.addEventListener('pointerdown', event => {
+    if (event.button > 0) return;
+    event.preventDefault();
+    queueDirection(button.dataset.dir);
+  });
+  // O click continua disponível para teclado e leitores de tela.
+  button.addEventListener('click', event => {
+    if (event.detail === 0 || !('PointerEvent' in window)) queueDirection(button.dataset.dir);
+  });
+  button.addEventListener('contextmenu', event => event.preventDefault());
 });
+const board = $('board');
+board.addEventListener('pointerdown', event => {
+  if (event.button > 0 || starting || !state || !['running', 'countdown'].includes(state.status) || swipeGesture || event.target?.closest?.('button')) return;
+  event.preventDefault();
+  swipeGesture = { id: event.pointerId, x: event.clientX, y: event.clientY, threshold: Math.max(16, Math.min(28, board.clientWidth * 0.07)) };
+  board.setPointerCapture?.(event.pointerId);
+});
+board.addEventListener('pointermove', event => {
+  if (!swipeGesture || swipeGesture.id !== event.pointerId) return;
+  const dx = event.clientX - swipeGesture.x;
+  const dy = event.clientY - swipeGesture.y;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < swipeGesture.threshold) return;
+  event.preventDefault();
+  queueDirection(Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP'));
+  swipeGesture = null;
+});
+for (const eventName of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+  board.addEventListener(eventName, event => { if (swipeGesture?.id === event.pointerId) swipeGesture = null; });
+}
+board.addEventListener('contextmenu', event => event.preventDefault());
+
 document.addEventListener('keydown', event => {
   if (!state || event.ctrlKey || event.altKey || event.metaKey || /^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName)) return;
   const keys = { ArrowLeft: 'LEFT', ArrowRight: 'RIGHT', ArrowUp: 'UP', ArrowDown: 'DOWN', a: 'LEFT', d: 'RIGHT', w: 'UP', s: 'DOWN' };
   const direction = keys[event.key] || keys[event.key.toLowerCase()];
-  if (direction) { event.preventDefault(); SnakeEngine.turn(state, direction); }
+  if (direction) { event.preventDefault(); queueDirection(direction); }
   if ((event.code === 'Space' || event.key === 'Escape') && !event.repeat && ['running', 'paused', 'countdown'].includes(state.status)) {
     event.preventDefault();
     togglePause();

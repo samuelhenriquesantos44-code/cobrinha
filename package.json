@@ -1,6 +1,6 @@
 {
   "name": "cobrinha",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "private": true,
   "description": "Jogo da cobrinha em HTML, CSS e JavaScript",
   "scripts": { "test": "node --test", "start": "node tools/serve.cjs" },

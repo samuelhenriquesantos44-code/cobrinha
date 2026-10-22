@@ -30,19 +30,24 @@ function setup(blockStorage = false) {
   }
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
-      hidden: false, disabled: false, textContent: '', value: 'normal',
+      hidden: false, disabled: false, textContent: '', value: 'normal', clientWidth: 300,
       selectedOptions: [{ textContent: 'Clássico' }],
       focus() {}, addEventListener(type, callback) { this[type] = callback; }
     });
     return elements.get(id);
   };
+  const buttons = ['UP','DOWN','LEFT','RIGHT'].map(dir => {
+    const button = element('dir'+dir);
+    button.dataset = {dir};
+    return button;
+  });
   const context = vm.createContext({
     SnakeEngine: require('../js/engine.js'),
     document: {
-      hidden: false, getElementById: element, querySelectorAll: () => [],
+      hidden: false, getElementById: element, querySelectorAll: () => buttons,
       addEventListener: (type, callback) => { events[type] = callback; }
     },
-    window: { addEventListener: (type, callback) => { events[type] = callback; } },
+    window: { PointerEvent: function PointerEvent() {}, addEventListener: (type, callback) => { events[type] = callback; } },
     localStorage: {
       getItem(key) { if (blockStorage) throw Error('Blocked'); return storage.get(key); },
       setItem(key, value) { if (blockStorage) throw Error('Blocked'); storage.set(key, value); }
@@ -111,7 +116,9 @@ test('setas bloqueiam rolagem e espaço alterna pausa', async () => {
   let prevented = 0;
   const key = (value, code) => ui.events.keydown({key:value, code, target:{tagName:'BUTTON'}, preventDefault() { prevented++; }});
   key('ArrowUp', 'ArrowUp');
-  assert.equal(ui.run('state.nextDir'), 'UP');
+  assert.equal(ui.run('directionQueue[0]'), 'UP');
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'), 'UP');
   key(' ', 'Space');
   assert.equal(ui.run('state.status'), 'paused');
   key(' ', 'Space');
@@ -202,4 +209,91 @@ test('voltar ao menu cancela o início enquanto a sessão online está sendo pre
   assert.equal(ui.element('menu').hidden,false);
   assert.equal(ui.element('gameArea').hidden,true);
   assert.equal(ui.element('start').disabled,false);
+});
+
+
+function pointer(ui, id, type, values = {}) {
+  const event = {pointerId:1,pointerType:'touch',button:0,clientX:150,clientY:150,target:{closest:()=>null},prevented:false,preventDefault(){this.prevented=true;},...values};
+  ui.element(id)[type](event);
+  return event;
+}
+
+test('setas respondem ao encostar e não repetem o comando no click do toque', async () => {
+  const ui=setup(); await ui.element('start').click(); ui.advance(3000);
+  const touch=pointer(ui,'dirUP','pointerdown');
+  assert.equal(touch.prevented,true);
+  assert.equal(ui.run('directionQueue.join()'),'UP');
+  ui.element('dirUP').click({detail:1});
+  assert.equal(ui.run('directionQueue.join()'),'UP');
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'UP');
+  assert.equal(ui.run('state.snake[0].y'),180);
+  ui.element('dirLEFT').click({detail:0});
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'LEFT','ativação por teclado continua funcionando');
+});
+
+test('duas curvas rápidas são aplicadas em movimentos consecutivos sem reversão', async () => {
+  const ui=setup(); await ui.element('start').click(); ui.advance(3000);
+  pointer(ui,'dirUP','pointerdown');
+  pointer(ui,'dirDOWN','pointerdown');
+  pointer(ui,'dirUP','pointerdown');
+  pointer(ui,'dirLEFT','pointerdown',{pointerId:2});
+  pointer(ui,'dirDOWN','pointerdown');
+  assert.equal(ui.run('directionQueue.join()'),'UP,LEFT');
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'UP');
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'LEFT');
+  assert.equal(ui.run('roundContext.moves.join()'),'UP,LEFT','ranking recebe a sequência real dos movimentos');
+});
+
+test('deslize reconhece as quatro direções sem mover a cobra antes do próximo passo', async () => {
+  for (const [dir,dx,dy,initial] of [['UP',0,-45,'RIGHT'],['DOWN',0,45,'RIGHT'],['LEFT',-45,0,'UP'],['RIGHT',45,0,'UP']]) {
+    const ui=setup(); await ui.element('start').click(); ui.advance(3000);
+    ui.run(`state.dir='${initial}';state.nextDir='${initial}'`);
+    pointer(ui,'board','pointerdown');
+    const move=pointer(ui,'board','pointermove',{clientX:150+dx,clientY:150+dy});
+    assert.equal(move.prevented,true);
+    assert.equal(ui.run('directionQueue[0]'),dir);
+    assert.equal(ui.run('state.snake[0].x'),200);
+    assert.equal(ui.run('state.snake[0].y'),200);
+    ui.advance(110);
+    assert.equal(ui.run('state.dir'),dir);
+  }
+});
+
+test('toques curtos, cancelados e de outro dedo não geram deslizes indevidos', async () => {
+  const ui=setup(); await ui.element('start').click(); ui.advance(3000);
+  pointer(ui,'board','pointerdown');
+  pointer(ui,'board','pointermove',{clientY:145});
+  pointer(ui,'board','pointermove',{pointerId:2,clientY:90});
+  assert.equal(ui.run('directionQueue.length'),0);
+  pointer(ui,'board','pointercancel');
+  pointer(ui,'board','pointermove',{clientY:90});
+  assert.equal(ui.run('directionQueue.length'),0);
+  pointer(ui,'board','pointerdown');
+  pointer(ui,'board','pointermove',{clientY:90});
+  pointer(ui,'board','pointermove',{clientX:90,clientY:90});
+  assert.equal(ui.run('directionQueue.join()'),'UP','cada gesto envia apenas uma direção');
+});
+
+test('direções preparadas na contagem entram em sequência e são limpas ao pausar ou reiniciar', async () => {
+  const ui=setup(); await ui.element('start').click();
+  pointer(ui,'board','pointerdown');
+  pointer(ui,'board','pointermove',{clientY:90});
+  pointer(ui,'dirLEFT','pointerdown');
+  ui.advance(3000);
+  assert.equal(ui.run('state.snake[0].y'),200);
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'UP');
+  ui.advance(110);
+  assert.equal(ui.run('state.dir'),'LEFT');
+  pointer(ui,'dirDOWN','pointerdown');
+  ui.element('pause').click();
+  assert.equal(ui.run('directionQueue.length'),0);
+  pointer(ui,'dirRIGHT','pointerdown');
+  assert.equal(ui.run('directionQueue.length'),0);
+  await ui.element('restart').click();
+  assert.equal(ui.run('directionQueue.length'),0);
 });
