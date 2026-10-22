@@ -1,47 +1,62 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cobrinha v1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
+  <meta name="theme-color" content="#020617">
+  <title>Cobrinha · v1.6.0</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/engine.js" defer></script>
+  <script src="js/renderer.js" defer></script>
+  <script src="js/game.js" defer></script>
 </head>
-
 <body>
-  <!-- Menu antes do game iniciar, aprimorar na v2.0 -->
-  <div id="menu">
-    <h1>🐍 Jogo da Cobrinha v1.5</h1>
-    <p>Prepare-se!</p>
-    <button onclick="startGame()">Iniciar</button>
-  </div>
-
-  <div id="gameArea" style="display:none">
-    <h1>Pontos: <span id="score">0</span></h1>
-    <canvas id="game" width="400" height="400"></canvas>
-
-    <div id="gameOverScreen" class="hidden">
-      <h2>💀 Game Over</h2>
-
-      <p>Pontuação: <span id="finalScore">0</span></p>
-
-      <button onclick="restartGame()">
-        Jogar novamente
-      </button>
-    </div>
-
-    <!-- Controles Mobile -->
-    <div id="controls">
-      <div></div>
-      <div class="ctrl" ontouchstart="setDir('UP')" onclick="setDir('UP')">⬆️</div>
-      <div></div>
-      <div class="ctrl" ontouchstart="setDir('LEFT')" onclick="setDir('LEFT')">⬅️</div>
-      <div class="ctrl" ontouchstart="setDir('DOWN')" onclick="setDir('DOWN')">⬇️</div>
-      <div class="ctrl" ontouchstart="setDir('RIGHT')" onclick="setDir('RIGHT')">➡️</div>
-    </div>
-
-    <button onclick="restartGame()">Reiniciar</button>
-  </div>
-  <script src="java/script.js"></script>
+  <main>
+    <section id="menu" class="panel" aria-labelledby="gameTitle">
+      <p class="eyebrow">UM CLÁSSICO, MAIS UMA PARTIDA</p>
+      <h1 id="gameTitle">🐍 Cobrinha</h1>
+      <p>Coma, cresça e supere seu recorde.</p>
+      <label for="difficulty">Escolha o ritmo</label>
+      <select id="difficulty">
+        <option value="easy">Tranquilo</option>
+        <option value="normal" selected>Clássico</option>
+        <option value="hard">Acelerado</option>
+      </select>
+      <button id="start" class="primary">Jogar</button>
+      <p class="instructions">Use as setas ou WASD no teclado, ou os botões na tela.<br>Espaço ou Esc para pausar. As bordas levam ao outro lado!</p>
+      <small>v1.6.0 · Feito para jogar de novo</small>
+    </section>
+    <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
+      <header class="game-header">
+        <h1>🐍 Cobrinha</h1>
+        <span id="level" class="badge">Clássico</span>
+      </header>
+      <div class="stats">
+        <div>Pontos <strong id="score">0</strong></div>
+        <div>Recorde <strong id="record">0</strong></div>
+      </div>
+      <div class="board">
+        <canvas id="game" width="400" height="400" role="img" aria-label="Tabuleiro da cobrinha. Use as setas ou os controles abaixo para jogar.">Seu navegador precisa oferecer suporte a canvas para jogar.</canvas>
+        <div id="overlay" role="dialog" aria-modal="false" aria-labelledby="overlayTitle" aria-describedby="overlayText" hidden>
+          <h2 id="overlayTitle">Fim de jogo</h2>
+          <p id="overlayText" aria-live="polite"></p>
+          <button id="overlayAction" class="primary">Jogar novamente</button>
+        </div>
+      </div>
+      <nav id="controls" aria-label="Direção da cobrinha">
+        <button class="ctrl up" data-dir="UP" aria-label="Cima">↑</button>
+        <button class="ctrl left" data-dir="LEFT" aria-label="Esquerda">←</button>
+        <button class="ctrl down" data-dir="DOWN" aria-label="Baixo">↓</button>
+        <button class="ctrl right" data-dir="RIGHT" aria-label="Direita">→</button>
+      </nav>
+      <div class="actions">
+        <button id="pause">Pausar</button>
+        <button id="restart">Reiniciar</button>
+        <button id="back" class="subtle">Menu</button>
+      </div>
+      <p class="hint">Setas / WASD · Espaço para pausar</p>
+    </section>
+  </main>
 </body>
-
 </html>
