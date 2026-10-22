@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cobrinha v1.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- Menu antes do game iniciar, aprimorar na v2.0 -->
+  <div id="menu">
+    <h1>🐍 Jogo da Cobrinha v1.5</h1>
+    <p>Prepare-se!</p>
+    <button onclick="startGame()">Iniciar</button>
+  </div>
+
+  <div id="gameArea" style="display:none">
+    <h1>Pontos: <span id="score">0</span></h1>
+    <canvas id="game" width="400" height="400"></canvas>
+
+    <div id="gameOverScreen" class="hidden">
+      <h2>💀 Game Over</h2>
+
+      <p>Pontuação: <span id="finalScore">0</span></p>
+
+      <button onclick="restartGame()">
+        Jogar novamente
+      </button>
+    </div>
+
+    <!-- Controles Mobile -->
+    <div id="controls">
+      <div></div>
+      <div class="ctrl" ontouchstart="setDir('UP')" onclick="setDir('UP')">⬆️</div>
+      <div></div>
+      <div class="ctrl" ontouchstart="setDir('LEFT')" onclick="setDir('LEFT')">⬅️</div>
+      <div class="ctrl" ontouchstart="setDir('DOWN')" onclick="setDir('DOWN')">⬇️</div>
+      <div class="ctrl" ontouchstart="setDir('RIGHT')" onclick="setDir('RIGHT')">➡️</div>
+    </div>
+
+    <button onclick="restartGame()">Reiniciar</button>
+  </div>
+  <script src="java/script.js"></script>
+</body>
+
+</html>

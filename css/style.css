@@ -1,0 +1,103 @@
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#menu,
+#gameArea {
+  background: #020617dd;
+  padding: 25px 35px;
+  border-radius: 20px;
+  box-shadow: 0 0 40px #22c55e55;
+  text-align: center;
+}
+h1 {
+  color: #22c55e;
+}
+canvas {
+  background: #020617;
+  border-radius: 12px;
+  margin-top: 10px;
+  border: 3px solid #22c55e;
+  box-shadow: 0 0 15px #22c55e66;
+}
+button {
+  margin-top: 10px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 12px;
+  background: #22c55e;
+  color: #020617;
+  font-size: 16px;
+}
+#controls {
+  display: grid;
+  grid-template-columns: 60px 60px 60px;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+.ctrl {
+  background: #22c55e;
+  color: #020617;
+  font-size: 20px;
+  border-radius: 12px;
+  padding: 10px;
+  user-select: none;
+  cursor: pointer;
+}
+.ctrl:active {
+  transform: scale(0.9);
+}
+
+#gameArea {
+  position: relative;
+}
+
+#gameOverScreen {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(2, 6, 23, 0.88);
+
+  border-radius: 20px;
+
+  animation: fadeIn 0.35s;
+}
+
+#gameOverScreen h2 {
+  color: #ef4444;
+  margin-bottom: 10px;
+  font-size: 36px;
+}
+
+#gameOverScreen p {
+  font-size: 22px;
+  margin-bottom: 25px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
