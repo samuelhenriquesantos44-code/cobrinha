@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jogue Cobrinha no computador ou celular. Escolha seu nível e supere seu recorde!">
   <meta name="theme-color" content="#020617">
-  <title>Cobrinha · v1.10.0</title>
-  <link rel="stylesheet" href="css/style.css?v=1.10.0">
-  <script src="js/engine.js?v=1.10.0" defer></script>
-  <script src="js/renderer.js?v=1.10.0" defer></script>
-  <script src="js/ranking.js?v=1.10.0" defer></script>
-  <script src="js/feedback.js?v=1.10.0" defer></script>
-  <script src="js/progression.js?v=1.10.0" defer></script>
-  <script src="js/customization.js?v=1.10.0" defer></script>
-  <script src="js/layout.js?v=1.10.0" defer></script>
-  <script src="js/game.js?v=1.10.0" defer></script>
-  <script src="js/welcome.js?v=1.10.0" defer></script>
+  <title>Cobrinha · v1.10.1</title>
+  <link rel="stylesheet" href="css/style.css?v=1.10.1">
+  <script src="js/engine.js?v=1.10.1" defer></script>
+  <script src="js/renderer.js?v=1.10.1" defer></script>
+  <script src="js/ranking.js?v=1.10.1" defer></script>
+  <script src="js/feedback.js?v=1.10.1" defer></script>
+  <script src="js/progression.js?v=1.10.1" defer></script>
+  <script src="js/customization.js?v=1.10.1" defer></script>
+  <script src="js/layout.js?v=1.10.1" defer></script>
+  <script src="js/game.js?v=1.10.1" defer></script>
+  <script src="js/welcome.js?v=1.10.1" defer></script>
 </head>
 <body>
   <main>
@@ -46,7 +46,7 @@
         <p id="personalRank" class="hint"></p>
       </section>
       <button id="openWelcome" class="subtle about-button">Sobre o jogo e notas da versão</button>
-      <small>v1.10.0 · Feito por Samuel Henrique</small>
+      <small>v1.10.1 · Feito por Samuel Henrique</small>
     </section>
     <section id="gameArea" class="panel" aria-label="Partida de Cobrinha" hidden>
       <header class="game-header">
@@ -93,7 +93,7 @@
   </main>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle">
     <header class="welcome-header">
-      <div class="welcome-brand"><span class="welcome-icon" aria-hidden="true">🐍</span><div><p class="eyebrow">COBRINHA</p><span class="welcome-version">v1.10.0 · Um clássico entre amigos</span></div></div>
+      <div class="welcome-brand"><span class="welcome-icon" aria-hidden="true">🐍</span><div><p class="eyebrow">COBRINHA</p><span class="welcome-version">v1.10.1 · Um clássico entre amigos</span></div></div>
       <button id="closeWelcome" class="welcome-close" aria-label="Fechar mensagem de boas-vindas">×</button>
     </header>
     <div class="welcome-tabs" role="tablist" aria-label="Informações do jogo">
@@ -109,7 +109,7 @@
           <span class="card-kicker">VAMOS MELHORAR JUNTOS</span>
           <h3>Sua próxima ideia pode entrar no jogo.</h3>
           <p>Sugestões, críticas ou um bug no caminho? Me avise. Se algo deu errado, conte o que aconteceu e qual aparelho você usou.</p>
-          <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.10.0"><span aria-hidden="true">✉</span> samuelhenrique.santos44@gmail.com <span aria-hidden="true">↗</span></a>
+          <a id="feedbackContact" class="contact-link" href="mailto:samuelhenrique.santos44@gmail.com?subject=Sugest%C3%A3o%20ou%20bug%20%E2%80%94%20Cobrinha%20v1.10.1"><span aria-hidden="true">✉</span> samuelhenrique.santos44@gmail.com <span aria-hidden="true">↗</span></a>
         </div>
         <div class="latest-update"><span class="update-symbol" aria-hidden="true">✦</span><div><strong>Sua cobrinha, suas conquistas.</strong><p>Mais espaço para deslizar no celular e novas cores para conquistar.</p><button id="viewUpdates" class="text-button">Ver novidades da versão →</button></div></div>
       </section>
@@ -117,10 +117,11 @@
         <p class="card-kicker">O JOGO CONTINUA CRESCENDO</p>
         <h2>O que mudou?</h2>
         <article class="release-current">
-          <div class="release-heading"><h3>v1.10.0</h3><span class="badge">Versão atual</span></div>
+          <div class="release-heading"><h3>v1.10.1</h3><span class="badge">Versão atual</span></div>
           <p class="release-date">11 de novembro de 2026</p>
-          <ul><li>Tabuleiro maior no celular e opção de ocultar as setas.</li><li>Controles compactos e menos rolagem durante a partida.</li><li>Quatro conquistas locais liberam azul, violeta, dourado e coral.</li><li>Seleção de cores salva para as próximas partidas.</li></ul>
+          <ul><li>Rankings dos três ritmos reiniciados, com histórico anterior arquivado.</li><li>Conexão atualizada para o novo endereço do ranking.</li><li>Recordes e conquistas locais preservados.</li></ul>
         </article>
+        <details><summary>v1.10.0 <span>Sua cobrinha, suas conquistas</span></summary><ul><li>Mais espaço no celular e opção de ocultar as setas.</li><li>Quatro conquistas locais e cores desbloqueáveis.</li></ul></details>
         <details><summary>v1.9.0 <span>Recordes e competição</span></summary><ul><li>Posição e próximo rival ao terminar a partida.</li><li>Comemoração de recordes pessoais, sons e vibração opcional.</li></ul></details>
         <details><summary>v1.8.1 <span>Deslize para jogar</span></summary><ul><li>Controle por deslize e setas com resposta ao toque.</li><li>Duas curvas rápidas e direções durante a contagem.</li><li>Botões maiores no celular.</li></ul></details>
         <details><summary>v1.8.0 <span>Prepare-se para jogar</span></summary><ul><li>Contagem 3, 2, 1 antes de começar, reiniciar ou retomar.</li><li>Boas-vindas com abas e botão de jogar sempre visível.</li><li>Correção de estilos desatualizados no navegador.</li></ul></details>

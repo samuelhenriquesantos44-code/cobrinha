@@ -1,6 +1,6 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.10.0**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.10.1**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
@@ -76,7 +76,7 @@ O endereço público também aparece no resultado do job de publicação.
 
 ## Ranking online
 
-O serviço [Ranking Cobrinha](https://cobrinha-ranking-samuel44.jauntyanole17.chatgpt.site)
+O serviço [Ranking Cobrinha](https://cobrinha-ranking-samuel44.samfrs19.chatgpt.site)
 usa banco persistente D1. O servidor recebe os movimentos e recalcula a pontuação.
 Apenas a melhor partida de cada identidade por dificuldade fica no ranking.
 Empates são ordenados pela data em que a pontuação foi alcançada.

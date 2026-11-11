@@ -1,6 +1,6 @@
 /* Identidade sem login: token aleatório mantido apenas neste navegador. */
 const RankingClient = (() => {
-  const API = "https://cobrinha-ranking-samuel44.jauntyanole17.chatgpt.site";
+  const API = "https://cobrinha-ranking-samuel44.samfrs19.chatgpt.site";
   const $ = id => document.getElementById(id);
   const profileKey = 'cobrinha:player:v1';
   const pendingKey = 'cobrinha:pending-score:v2';

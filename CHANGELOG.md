@@ -1,5 +1,11 @@
 # Histórico
 
+## 1.10.1
+
+- Reinicia os três rankings online em 11/11/2026, preservando histórico em tabelas privadas.
+- Invalida sessões anteriores ao reinício e mantém recordes e conquistas dos aparelhos.
+- Atualiza a API para o endereço canônico publicado pelo Sites, evitando redirecionamento sem CORS.
+
 ## 1.10.0
 
 - Amplia o espaço de jogo no celular, com ações compactas e opção de ocultar as setas.
