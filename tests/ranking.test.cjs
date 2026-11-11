@@ -69,6 +69,27 @@ test('próximo rival funciona fora do Top 10, nos empates e na liderança',async
   data=await (await request(env,'/ranking?difficulty=easy&player=000000000000000c')).json();
   assert.equal(data.personal,null);assert.equal(data.rival,null);
 });
+
+test('reinício arquiva todos os ritmos, invalida sessões antigas e aceita partidas novas',async()=>{
+  const env=database(),token=crypto.randomUUID(),oldRun=crypto.randomUUID();
+  for(const level of ['easy','normal','hard']) env.sqlite.prepare('INSERT INTO scores VALUES(?,?,?,?,?)').run('a'.repeat(64),level,'Jogador anterior',99,1);
+  env.sqlite.prepare('INSERT INTO runs(id,seed,difficulty,created_at,ip_hash) VALUES(?,?,?,?,?)').run(oldRun,42,'normal',Date.now()-10000,'old-ip-hash');
+  const migration=fs.readFileSync(path.join(__dirname,'../ranking-service/drizzle/0001_restart_rankings.sql'),'utf8');
+  env.sqlite.exec(migration.replaceAll('--> statement-breakpoint',''));
+  assert.equal(env.sqlite.prepare('SELECT COUNT(*) AS n FROM scores_archive_20261111').get().n,3);
+  assert.equal(env.sqlite.prepare('SELECT COUNT(*) AS n FROM runs_archive_20261111').get().n,1);
+  for(const level of ['easy','normal','hard']) {
+    const data=await (await request(env,`/ranking?difficulty=${level}&player=${'a'.repeat(16)}`)).json();
+    assert.deepEqual(data.entries,[]);assert.equal(data.personal,null);assert.equal(data.rival,null);
+  }
+  assert.equal((await request(env,'/scores',{runId:oldRun,playerToken:token,nickname:'Jogador',moves:'R'})).status,409);
+  const session=await (await request(env,'/sessions',{difficulty:'normal'})).json();
+  env.sqlite.prepare('UPDATE runs SET created_at=? WHERE id=?').run(Date.now()-60000,session.id);
+  const saved=await request(env,'/scores',{runId:session.id,playerToken:token,nickname:'Novo jogador',moves:replay(session.seed)});
+  assert.equal(saved.status,200);
+  assert.equal((await (await request(env,'/ranking?difficulty=normal')).json()).entries[0].nickname,'Novo jogador');
+  assert.equal(env.sqlite.prepare('SELECT COUNT(*) AS n FROM scores_archive_20261111').get().n,3);
+});
 test('servidor recalcula pontos, persiste melhor resultado e rejeita reenvio',async()=>{
   const env=database(),token=crypto.randomUUID();
   async function play() {
