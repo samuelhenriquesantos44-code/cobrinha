@@ -100,6 +100,21 @@ test('recorde pessoal comemora uma vez por partida e reiniciar limpa resultado',
   assert.equal(ui.run('roundContext.initialRecord'),2);
 });
 
+test('cores entram no desenho e progresso conta só uma partida encerrada',async()=>{
+  const ui=setup(),finished=[],active=[];
+  ui.context.GameCustomization={palette:()=>({head:'#0ea5e9',body:'#7dd3fc'}),finish:result=>finished.push({...result})};
+  ui.context.GameLayout={setActive:value=>active.push(value)};
+  await ui.element('start').click();ui.advance(3000);
+  assert.equal(ui.run('effects.palette.head'),'#0ea5e9');
+  ui.run('state.food={x:220,y:200};tick()');
+  await ui.element('restart').click();ui.advance(3000);
+  assert.equal(finished.length,0);
+  ui.run('state.food={x:220,y:200};tick();state.snake[0]={x:380,y:200};tick();tick()');
+  assert.equal(finished.length,1);assert.equal(finished[0].score,1);assert.equal(finished[0].initialRecord,1);
+  assert.equal(ui.element('saveStatus').hidden,false);
+  assert.deepEqual(active,[true,true,false]);
+});
+
 test('troca de aba e janela pausa sem retomar automaticamente', async () => {
   const ui = setup(); await ui.element('start').click(); ui.advance(3000);
   ui.context.document.hidden = true;

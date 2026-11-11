@@ -1,5 +1,14 @@
 # Histórico
 
+## 1.10.0
+
+- Amplia o espaço de jogo no celular, com ações compactas e opção de ocultar as setas.
+- Salva a preferência por deslize e mantém as mensagens sem deslocar o tabuleiro.
+- Adiciona quatro conquistas locais que desbloqueiam azul, violeta, dourado e coral.
+- Salva a cor selecionada e aplica na próxima partida, sem alterar as regras do ranking.
+- Aproveita recordes anteriores para as conquistas de 10 e 25 pontos.
+- Conta partidas com pontos e recordes superados apenas ao terminar; progresso é local ao aparelho.
+
 ## 1.9.0
 
 - Mostra posição pessoal, melhor pontuação e próximo rival ao terminar a partida.

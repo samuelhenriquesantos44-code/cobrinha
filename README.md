@@ -1,6 +1,6 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.9.0**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.10.0**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
@@ -27,6 +27,9 @@ Também é possível abrir `index.html` diretamente no navegador.
 - Sair da aba ou janela durante a contagem pausa o jogo.
 - Bater nas paredes ou no corpo encerra a partida.
 - Complete as 400 casas para vencer.
+- No celular, o menu e o botão “Ocultar setas” permitem priorizar o deslize e ampliar o tabuleiro. A preferência é lembrada.
+- Em “Minha cobrinha”, acompanhe quatro conquistas e escolha as cores desbloqueadas. Faça 10 pontos (azul), 25 pontos (violeta), termine 5 partidas superando seu recorde local (dourada) ou 10 partidas com pontos (coral).
+- Conquistas são salvas neste navegador. Recordes anteriores contam para as metas de pontos; partidas antigas não são contadas retroativamente. Reiniciar ou sair antes do fim não soma partidas nem recordes superados.
 - Sons curtos e vibração opcional no menu, com preferências salvas. O som também pode ser desligado durante a partida. Vibração depende do suporte do aparelho/navegador.
 - Novo recorde pessoal do aparelho recebe destaque visual uma vez por partida.
 - Ao terminar, veja a posição do seu melhor resultado online e a meta para ultrapassar o próximo rival, inclusive fora do Top 10.
@@ -51,6 +54,9 @@ pausa, navegação da interface, teclado, persistência, reenvio e validação d
 - `js/engine.js`: estado e regras, sem dependência do navegador.
 - `js/renderer.js`: desenho do canvas e efeitos visuais.
 - `js/feedback.js`: sons sintetizados, vibração opcional e preferências locais.
+- `js/progression.js`: metas e regras das conquistas locais.
+- `js/customization.js`: cores, conquistas e persistência do progresso.
+- `js/layout.js`: preferência de controles e espaço de jogo.
 - `js/game.js`: controles, telas, relógio e recordes.
 - `css/style.css`: layout adaptável a celular.
 - `js/ranking.js`: identidade local, top 10, posição pessoal e envio das partidas.

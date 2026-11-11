@@ -51,7 +51,7 @@ function beginCountdown() {
   $('countdown').hidden = false;
   $('pause').textContent = 'Pausar';
   $('pause').focus({ preventScroll: true });
-  $('game').scrollIntoView?.({ block: 'center', behavior: 'auto' });
+  $('gameArea').scrollIntoView?.({ block: 'start', behavior: 'auto' });
   let remaining = 3;
   $('countdownNumber').textContent = remaining;
   function next() {
@@ -109,12 +109,16 @@ async function startGame() {
   $('recordCelebration').hidden = true;
   $('finalStanding').hidden = true;
   $('controls').hidden = false;
+  if (typeof GameLayout !== 'undefined') GameLayout.setActive(true);
+  $('unlockNotice').hidden = true;
+  $('saveStatus').hidden = true;
   $('retryScore').hidden = true;
   state = SnakeEngine.createGame(random);
   $('playerName').textContent = profile.nickname;
   $('profileError').textContent = '';
   $('saveStatus').textContent = round ? 'Partida conectada ao ranking' : 'Sem conexão com o ranking. Recorde salvo neste aparelho.';
   effects = { pulse: 0, eatAnimation: 0, particles: [] };
+  if (typeof GameCustomization !== 'undefined') effects.palette = GameCustomization.palette();
   $('menu').hidden = true;
   $('gameArea').hidden = false;
   $('overlay').hidden = true;
@@ -157,6 +161,9 @@ function tick() {
     clearInterval(timer);
     $('pause').disabled = true;
     $('controls').hidden = true;
+    if (typeof GameLayout !== 'undefined') GameLayout.setActive(false);
+    $('saveStatus').hidden = false;
+    if (typeof GameCustomization !== 'undefined') GameCustomization.finish({score:state.score,initialRecord:roundContext.initialRecord});
     if (typeof GameFeedback !== 'undefined') GameFeedback.play(state.status);
     showOverlay(state.status === 'won' ? 'Você venceu! 🏆' : state.reason === 'wall' ? 'Bateu na parede!' : 'Bateu na cobrinha!', `Pontuação: ${state.score}`, 'Jogar novamente');
     if (typeof RankingClient !== 'undefined') RankingClient.finish(roundContext, state.score);
@@ -191,6 +198,7 @@ $('back').addEventListener('click', () => {
   resetControls();
   clearInterval(timer);
   state = null;
+  if (typeof GameLayout !== 'undefined') GameLayout.setActive(false);
   $('gameArea').hidden = true;
   $('menu').hidden = false;
   $('start').focus();

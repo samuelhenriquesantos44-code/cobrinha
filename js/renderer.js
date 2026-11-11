@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 function renderGame(state, effects) {
   const {snake, food, dir} = state;
   const {pulse, eatAnimation, particles} = effects;
+  const palette = effects.palette || {head:'#22c55e',body:'#4ade80'};
   const box = 20;
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, 0, 400, 400);
@@ -23,7 +24,7 @@ function renderGame(state, effects) {
   }
 
   snake.forEach((p, i) => {
-    ctx.fillStyle = i == 0 ? "#22c55e" : "#4ade80";
+    ctx.fillStyle = i == 0 ? palette.head : palette.body;
 
     let size = box - 2;
     let offset = 0;
