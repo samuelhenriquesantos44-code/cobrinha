@@ -1,5 +1,15 @@
 # Histórico
 
+## 1.11.0
+
+- Adiciona Conquiste o mapa, modo solo de disputa territorial contra dois bots.
+- Captura caminhos fechados e áreas cercadas, com corte de rastros, colisões e eliminação de rivais.
+- Oferece três dificuldades, partidas de 90 segundos e vitória por 50%, eliminação ou maior área no tempo.
+- Adiciona contagem, pausa manual/automática, setas, WASD e deslize.
+- Mantém recorde de área por dificuldade no aparelho, separado do ranking clássico.
+- Reutiliza a cor desbloqueada escolhida e a preferência de ocultar setas.
+- Publica territory.html e seus recursos pelo GitHub Pages.
+
 ## 1.10.1
 
 - Reinicia os três rankings online em 11/11/2026, preservando histórico em tabelas privadas.

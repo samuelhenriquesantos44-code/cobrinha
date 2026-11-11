@@ -188,3 +188,10 @@ body.welcome-open { overflow: hidden; }
   #overlay p { margin:8px 0 12px; font-size:13px; }
   #overlayAction { padding:10px 12px; font-size:13px; }
 }
+
+.territory-mode-card { display:block; padding:18px; margin:20px 0; border:1px solid #376b56; border-radius:16px; text-align:left; text-decoration:none; background:linear-gradient(120deg,#123d2eaa,#112b3d77); color:#a7b9c7; }
+.territory-mode-card:hover { border-color:#86efac; background:linear-gradient(120deg,#174c39aa,#15344a77); }
+.territory-mode-card:focus-visible { outline:3px solid #facc15; outline-offset:4px; }
+.territory-mode-card .mode-card-kicker { display:block; color:#86efac; font-size:8px; letter-spacing:1.5px; }
+.territory-mode-card strong { display:flex; justify-content:space-between; color:#f1f5f9; font-size:20px; margin:10px 0 7px; letter-spacing:-.5px; }
+.territory-mode-card > span:last-child { font-size:12px; line-height:1.6; }

@@ -1,12 +1,23 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.10.1**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.11.0**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
 Ao abrir, o jogo mostra os créditos de Samuel Henrique, o canal para sugestões e
 relatos de bugs e as notas da versão. O botão “Sobre o jogo e notas da versão”
 permite consultar essas informações novamente no menu.
+
+## Conquiste o mapa
+
+[Entrar no modo Conquista](https://samuelhenriquesantos44-code.github.io/cobrinha/territory.html).
+Também está disponível no cartão “Conquiste o mapa” do menu clássico.
+
+- Saia da sua base para criar um rastro e volte a qualquer parte do seu território para fechar o caminho. O rastro e a área cercada passam a ser seus.
+- Corte o rastro de um bot para eliminá-lo. Um bot cortar seu rastro, bater na borda, cruzar seu próprio caminho ou encontrar um rival fora de casa pode encerrar a partida.
+- Conquiste 50%, elimine os dois bots ou termine os 90 segundos com a maior área. Áreas iguais ao fim do tempo resultam em empate.
+- Três dificuldades alteram a velocidade dos bots. Recorde local da maior área por ritmo; este modo não envia resultados ao ranking clássico nem soma conquistas dele.
+- Deslize, setas, WASD, pausa com Espaço/Esc e pausa automática ao sair. A cor já escolhida e a preferência de ocultar setas são aproveitadas.
 
 ## Jogar e desenvolver
 
@@ -56,6 +67,9 @@ pausa, navegação da interface, teclado, persistência, reenvio e validação d
 - `js/feedback.js`: sons sintetizados, vibração opcional e preferências locais.
 - `js/progression.js`: metas e regras das conquistas locais.
 - `js/customization.js`: cores, conquistas e persistência do progresso.
+- `js/territory-engine.js`: regras de conquista e decisões dos bots, sem navegador.
+- `js/territory-renderer.js` e `js/territory.js`: mapa, gestos, HUD e ciclo da partida.
+- `territory.html` e `css/territory.css`: apresentação e layout do novo modo.
 - `js/layout.js`: preferência de controles e espaço de jogo.
 - `js/game.js`: controles, telas, relógio e recordes.
 - `css/style.css`: layout adaptável a celular.
@@ -68,7 +82,7 @@ pausa, navegação da interface, teclado, persistência, reenvio e validação d
 1. Crie um repositório no GitHub e envie a branch `main`.
 2. Em Settings → Pages → Build and deployment, escolha **GitHub Actions**.
 3. Execute o workflow “Testar e publicar Cobrinha” ou envie um novo commit.
-4. O workflow testa o jogo e publica apenas `index.html`, `css/` e `js/`.
+4. O workflow testa o jogo e publica apenas `index.html`, `territory.html`, `css/` e `js/`.
 
 Neste repositório, a publicação por GitHub Actions já está configurada.
 Cada envio para `main` executa os testes e publica a versão aprovada.

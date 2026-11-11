@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f"><meta name="description" content="Feche caminhos, conquiste território e enfrente dois bots no novo modo da Cobrinha.">
+  <title>Conquiste o mapa · Cobrinha</title>
+  <link rel="stylesheet" href="css/style.css?v=1.11.0"><link rel="stylesheet" href="css/territory.css?v=1.11.0">
+  <script src="js/progression.js?v=1.11.0" defer></script><script src="js/territory-engine.js?v=1.11.0" defer></script><script src="js/territory-renderer.js?v=1.11.0" defer></script><script src="js/territory.js?v=1.11.0" defer></script>
+</head>
+<body class="territory-page">
+  <main>
+    <section id="territorySetup" class="panel territory-setup">
+      <a class="territory-back" href="index.html">← Cobrinha clássica</a>
+      <p class="eyebrow">OUTRO JEITO DE JOGAR · SOLO CONTRA BOTS</p>
+      <h1>Conquiste<br><span>o mapa.</span></h1>
+      <p class="territory-intro">Seu caminho vira território.<br>Seu rastro pode virar seu ponto fraco.</p>
+      <div class="territory-preview" aria-hidden="true"><div class="preview-land"></div><div class="preview-path"></div><span class="preview-head">••</span><span class="preview-label">SAIA. CERQUE. VOLTE.</span><i></i><b></b></div>
+      <ol class="territory-rules"><li><strong>Saia de casa.</strong> Mova-se para fora da sua área para deixar um rastro.</li><li><strong>Feche o caminho.</strong> Volte ao seu território para conquistar a área cercada.</li><li><strong>Proteja seu rastro.</strong> Se um bot tocar nele, você perde. Você também pode cortar o rastro dos bots!</li></ol>
+      <p class="territory-objective">Domine <strong>50% do mapa</strong>, elimine os dois bots ou tenha a maior área ao final de <strong>90 segundos</strong>.</p>
+      <label for="territoryDifficulty">Seus adversários</label>
+      <select id="territoryDifficulty"><option value="easy">Exploradores · bots mais lentos</option><option value="normal" selected>Disputa · ritmo equilibrado</option><option value="hard">Pressão · bots na sua velocidade</option></select>
+      <button id="territoryStart" class="primary">Entrar na disputa <span aria-hidden="true">↗</span></button>
+      <p class="hint">Deslize, use as setas ou WASD. Bater na borda ou cruzar seu próprio rastro encerra a partida.</p>
+      <small>Recordes deste modo ficam neste aparelho · v1.11.0</small>
+    </section>
+    <section id="territoryArea" class="panel territory-area" aria-label="Partida de Conquiste o mapa" hidden>
+      <header class="territory-header"><div><p class="eyebrow">COBRINHA / CONQUISTA</p><h1>O mapa está em jogo.</h1></div><span id="territoryLevel" class="badge">Disputa</span></header>
+      <div class="territory-hud"><div>Sua área<strong id="territoryPercent">4.3%</strong></div><div>Tempo<strong id="territoryTime">1:30</strong></div><div>Seu melhor<strong id="territoryBest">0.0%</strong></div></div>
+      <div class="territory-goal"><progress id="territoryProgress" max="100" value="0" aria-label="Porcentagem do mapa conquistada"></progress><span>Meta: 50%</span></div>
+      <p id="territoryDanger" class="territory-danger" role="status">Você está em casa. Saia e volte para conquistar.</p>
+      <div id="territoryBoard" class="territory-board">
+        <canvas id="territoryCanvas" width="480" height="480" role="img" aria-label="Mapa com seu território e dois bots. Deslize ou use as setas para mover."></canvas>
+        <div id="territoryCountdown" class="countdown" role="status" aria-live="polite" hidden><p>Encontre sua rota</p><strong id="territoryCountdownNumber">3</strong><span>Você começa no canto inferior esquerdo</span></div>
+        <div id="territoryOverlay" role="dialog" aria-labelledby="territoryOverlayTitle" aria-describedby="territoryOverlayText" hidden><h2 id="territoryOverlayTitle"></h2><p id="territoryOverlayText"></p><button id="territoryOverlayAction" class="primary">Continuar</button></div>
+      </div>
+      <div class="territory-owners" aria-label="Áreas dos jogadores"><span id="territoryRival1"><i class="owner-human"></i>Você <b id="territoryOwner1">4.3%</b></span><span id="territoryRival2"><i class="owner-blue"></i>Atlas <b id="territoryOwner2">4.3%</b></span><span id="territoryRival3"><i class="owner-pink"></i>Nova <b id="territoryOwner3">4.3%</b></span></div>
+      <nav id="territoryControls" aria-label="Direção da conquista"><button class="ctrl up" data-territory-dir="UP" aria-label="Cima">↑</button><button class="ctrl left" data-territory-dir="LEFT" aria-label="Esquerda">←</button><button class="ctrl down" data-territory-dir="DOWN" aria-label="Baixo">↓</button><button class="ctrl right" data-territory-dir="RIGHT" aria-label="Direita">→</button></nav>
+      <div class="actions"><button id="territoryPause">Pausar</button><button id="territoryRestart">Reiniciar</button><button id="territoryMenu" class="subtle">Opções</button></div>
+      <button id="territoryToggleControls" class="subtle territory-toggle" aria-controls="territoryControls" aria-expanded="true">Ocultar setas</button>
+      <p id="territoryResult" class="territory-result" role="status" hidden></p>
+    </section>
+  </main>
+</body>
+</html>
