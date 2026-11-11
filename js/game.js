@@ -32,6 +32,7 @@ function cancelCountdown() {
 }
 
 function pauseGame() {
+  if (typeof GameFeedback !== 'undefined') GameFeedback.stop();
   resetControls();
   cancelCountdown();
   clearInterval(timer);
@@ -84,6 +85,7 @@ function updateScore() {
 
 async function startGame() {
   if (starting) return;
+  if (typeof GameFeedback !== 'undefined') { GameFeedback.stop(); GameFeedback.unlock(); }
   let profile;
   try { profile = typeof RankingClient !== 'undefined' ? RankingClient.profile($('nickname').value) : { nickname: 'Jogador' }; }
   catch (error) { $('profileError').textContent = error.message; $('nickname').focus(); return; }
@@ -102,6 +104,12 @@ async function startGame() {
   const random = round ? SnakeEngine.seededRandom(round.seed) : Math.random;
   roundContext = { round, profile, difficulty, random, moves: [] };
   record = readRecord();
+  roundContext.initialRecord = record;
+  roundContext.brokeRecord = false;
+  $('recordCelebration').hidden = true;
+  $('finalStanding').hidden = true;
+  $('controls').hidden = false;
+  $('retryScore').hidden = true;
   state = SnakeEngine.createGame(random);
   $('playerName').textContent = profile.nickname;
   $('profileError').textContent = '';
@@ -131,6 +139,12 @@ function tick() {
   effects.particles = effects.particles.filter(p => --p.life > 0);
   for (const p of effects.particles) { p.x += p.dx; p.y += p.dy; }
   if (result.ate) {
+    const newRecord = !roundContext.brokeRecord && state.score > roundContext.initialRecord;
+    if (newRecord) {
+      roundContext.brokeRecord = true;
+      $('recordCelebration').hidden = false;
+    }
+    if (typeof GameFeedback !== 'undefined') GameFeedback.play(newRecord ? 'record' : 'eat');
     effects.eatAnimation = 6;
     for (let i = 0; i < 12; i++) {
       effects.particles.push({ x: result.head.x + 10, y: result.head.y + 10, dx: (Math.random() - .5) * 4, dy: (Math.random() - .5) * 4, life: 25 });
@@ -142,6 +156,8 @@ function tick() {
     resetControls();
     clearInterval(timer);
     $('pause').disabled = true;
+    $('controls').hidden = true;
+    if (typeof GameFeedback !== 'undefined') GameFeedback.play(state.status);
     showOverlay(state.status === 'won' ? 'Você venceu! 🏆' : state.reason === 'wall' ? 'Bateu na parede!' : 'Bateu na cobrinha!', `Pontuação: ${state.score}`, 'Jogar novamente');
     if (typeof RankingClient !== 'undefined') RankingClient.finish(roundContext, state.score);
   }
@@ -157,7 +173,7 @@ function showOverlay(title, text, action) {
 
 function togglePause() {
   if (starting || !state || !['running', 'paused', 'countdown'].includes(state.status)) return;
-  if (state.status === 'paused') beginCountdown();
+  if (state.status === 'paused') { if (typeof GameFeedback !== 'undefined') GameFeedback.unlock(); beginCountdown(); }
   else pauseGame();
 }
 
@@ -166,6 +182,7 @@ $('restart').addEventListener('click', startGame);
 $('pause').addEventListener('click', togglePause);
 $('overlayAction').addEventListener('click', () => state.status === 'paused' ? togglePause() : startGame());
 $('back').addEventListener('click', () => {
+  if (typeof GameFeedback !== 'undefined') GameFeedback.stop();
   startSequence++;
   starting = false;
   $('start').disabled = false;

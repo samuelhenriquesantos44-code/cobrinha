@@ -82,6 +82,24 @@ test('iniciar, pausar, continuar e reiniciar atualizam a interface', async () =>
   assert.equal(ui.element('menu').hidden, false);
 });
 
+test('recorde pessoal comemora uma vez por partida e reiniciar limpa resultado',async()=>{
+  const ui=setup();const sounds=[];
+  ui.context.GameFeedback={unlock(){},stop(){},play:kind=>sounds.push(kind)};
+  await ui.element('start').click();ui.advance(3000);
+  ui.run('state.food={x:220,y:200};tick()');
+  assert.equal(ui.element('recordCelebration').hidden,false);
+  ui.run('state.food={x:240,y:200};tick()');
+  assert.deepEqual(sounds,['record','eat']);
+  ui.run('state.snake[0]={x:380,y:200};tick()');
+  assert.equal(ui.element('controls').hidden,true);
+  assert.equal(sounds.at(-1),'lost');
+  await ui.element('restart').click();
+  assert.equal(ui.element('recordCelebration').hidden,true);
+  assert.equal(ui.element('finalStanding').hidden,true);
+  assert.equal(ui.element('controls').hidden,false);
+  assert.equal(ui.run('roundContext.initialRecord'),2);
+});
+
 test('troca de aba e janela pausa sem retomar automaticamente', async () => {
   const ui = setup(); await ui.element('start').click(); ui.advance(3000);
   ui.context.document.hidden = true;

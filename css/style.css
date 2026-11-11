@@ -128,3 +128,17 @@ body.welcome-open { overflow: hidden; }
   #controls { grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(2, 54px); gap: 8px; margin: 12px 0; }
   .ctrl { font-size: 28px; }
 }
+
+.feedback-settings { display:flex; flex-wrap:wrap; gap:12px 24px; margin:16px 0; padding:12px 16px; border:1px solid #243b45; border-radius:12px; text-align:left; }
+.feedback-settings legend { color:#a6b5c7; font-size:12px; padding:0 6px; }
+#menu .feedback-settings label { display:flex; align-items:center; gap:8px; margin:0; font-size:13px; cursor:pointer; }
+.feedback-settings input { width:20px; height:20px; min-height:20px; padding:0; margin:0; accent-color:#4ade80; }
+.feedback-settings .hint { flex-basis:100%; margin:0; font-size:11px; }
+.sound-button { margin-top:12px; font-size:12px; min-height:40px; }
+.record-celebration { padding:9px 12px; margin:0 0 12px; border:1px solid #ca8a0480; background:#422d1266; color:#fde68a; font-size:12px; border-radius:10px; animation:record-pop .5s ease-out; }
+@keyframes record-pop { from { transform:scale(.94); opacity:.4; } to { transform:scale(1); opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .record-celebration { animation:none; } }
+.final-standing { text-align:left; margin:14px 0; padding:16px; border:1px solid #285a44; border-radius:14px; background:linear-gradient(120deg,#133e2b77,#0b1e2166); }
+.final-standing .card-kicker { margin-bottom:8px; font-size:9px; }
+.final-standing strong { display:block; color:#bbf7d0; font-size:19px; line-height:1.4; }
+.final-standing p:last-child { font-size:12px; color:#a6b5c7; line-height:1.6; margin:8px 0 0; overflow-wrap:anywhere; }

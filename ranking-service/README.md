@@ -4,7 +4,7 @@ Worker ESM com banco D1, publicado pelo Sites. O jogo continua no GitHub Pages.
 
 - `POST /sessions`: inicia uma partida com dificuldade e semente aleatória.
 - `POST /scores`: recebe identidade aleatória do aparelho, apelido e movimentos; recalcula os pontos com as regras do jogo.
-- `GET /ranking?difficulty=normal&player=<id público>`: top 10 e posição pessoal.
+- `GET /ranking?difficulty=normal&player=<id público>`: top 10, posição pessoal e rival imediatamente acima (inclusive fora do top 10).
 - `GET /health`: verifica o banco.
 
 As tabelas são criadas pela migração SQL em `drizzle/`, aplicada na publicação.

@@ -1,5 +1,14 @@
 # Histórico
 
+## 1.9.0
+
+- Mostra posição pessoal, melhor pontuação e próximo rival ao terminar a partida.
+- Consulta o rival mesmo quando o jogador está fora do Top 10.
+- Celebra novo recorde pessoal do aparelho uma vez por partida.
+- Adiciona sons curtos e vibração opcional, com preferências salvas.
+- Permite desligar o som durante a partida e cancela efeitos ao pausar ou sair.
+- Corrige as URLs de CSS e JavaScript para carregar a versão publicada.
+
 ## 1.8.1
 
 - Adiciona deslize no tabuleiro e resposta das setas ao encostar o dedo.

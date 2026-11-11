@@ -57,6 +57,18 @@ test('ranking começa vazio e permite CORS apenas para o jogo',async()=>{
   assert.equal((await request(env,'/ranking?difficulty=nope')).status,400);
   assert.equal((await request(env,'/health')).status,200);
 });
+
+test('próximo rival funciona fora do Top 10, nos empates e na liderança',async()=>{
+  const env=database();
+  for(let i=1;i<=12;i++) env.sqlite.prepare('INSERT INTO scores VALUES(?,?,?,?,?)').run(i.toString(16).padStart(16,'0').padEnd(64,'a'),'normal','Amigo '+i,20,i);
+  let data=await (await request(env,'/ranking?difficulty=normal&player=000000000000000c')).json();
+  assert.equal(data.entries.length,10);assert.equal(data.personal.position,12);
+  assert.equal(data.rival.position,11);assert.equal(data.rival.nickname,'Amigo 11');
+  data=await (await request(env,'/ranking?difficulty=normal&player=0000000000000001')).json();
+  assert.equal(data.personal.position,1);assert.equal(data.rival,null);
+  data=await (await request(env,'/ranking?difficulty=easy&player=000000000000000c')).json();
+  assert.equal(data.personal,null);assert.equal(data.rival,null);
+});
 test('servidor recalcula pontos, persiste melhor resultado e rejeita reenvio',async()=>{
   const env=database(),token=crypto.randomUUID();
   async function play() {

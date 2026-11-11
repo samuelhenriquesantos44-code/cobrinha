@@ -1,6 +1,6 @@
 # 🐍 Cobrinha
 
-Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.8.1**.
+Jogo de navegador em HTML, CSS e JavaScript. Versão atual: **1.9.0**.
 
 [Jogar online](https://samuelhenriquesantos44-code.github.io/cobrinha/) · [Código e histórico](https://github.com/samuelhenriquesantos44-code/cobrinha)
 
@@ -27,6 +27,9 @@ Também é possível abrir `index.html` diretamente no navegador.
 - Sair da aba ou janela durante a contagem pausa o jogo.
 - Bater nas paredes ou no corpo encerra a partida.
 - Complete as 400 casas para vencer.
+- Sons curtos e vibração opcional no menu, com preferências salvas. O som também pode ser desligado durante a partida. Vibração depende do suporte do aparelho/navegador.
+- Novo recorde pessoal do aparelho recebe destaque visual uma vez por partida.
+- Ao terminar, veja a posição do seu melhor resultado online e a meta para ultrapassar o próximo rival, inclusive fora do Top 10.
 - Três ritmos de jogo, recorde local por nível e ranking online por dificuldade.
 - Escolha um apelido de 3 a 20 caracteres. Complete uma partida com pelo menos 1 ponto para aparecer no ranking.
 - O apelido e os pontos são públicos. Apelidos não são exclusivos; cada aparelho mantém sua própria identidade aleatória, sem login.
@@ -47,6 +50,7 @@ pausa, navegação da interface, teclado, persistência, reenvio e validação d
 
 - `js/engine.js`: estado e regras, sem dependência do navegador.
 - `js/renderer.js`: desenho do canvas e efeitos visuais.
+- `js/feedback.js`: sons sintetizados, vibração opcional e preferências locais.
 - `js/game.js`: controles, telas, relógio e recordes.
 - `css/style.css`: layout adaptável a celular.
 - `js/ranking.js`: identidade local, top 10, posição pessoal e envio das partidas.
@@ -80,6 +84,6 @@ O endereço da API está definido em `js/ranking.js`. Consulte o README do servi
 
 ## Próximas melhorias
 
-- Sons opcionais.
+- Mais opções visuais e desafios diários.
 - Mais testes em aparelhos reais.
-- Salas privadas e recuperação de identidade por login, se desejado.
+- Compartilhamento do resultado com amigos.

@@ -8,6 +8,8 @@ const settle=()=>new Promise(resolve=>setImmediate(resolve));
 function setup() {
   const elements=new Map(),storage=new Map(),requests=[];
   let failSave=false;
+  let ranking={entries:[{id:'someone',nickname:'<img src=x>',score:3,position:1}],personal:null};
+  let rankingWait;
   function node() { return {value:'normal',textContent:'',hidden:false,children:[],classList:{add(){}},addEventListener(type,callback){this[type]=callback;},replaceChildren(){this.children=[];},append(...items){this.children.push(...items);}}; }
   const get=id=>{if(!elements.has(id))elements.set(id,node());return elements.get(id);};
   const context=vm.createContext({
@@ -17,12 +19,12 @@ function setup() {
     fetch:async(url,options)=>{
       requests.push({url,options});
       if(url.endsWith('/scores') && failSave)throw Error('Offline');
-      if(url.includes('/ranking?'))return Response.json({entries:[{id:'someone',nickname:'<img src=x>',score:3,position:1}],personal:null});
+      if(url.includes('/ranking?')) { const data=ranking; if(rankingWait) await rankingWait; return Response.json(data); }
       return Response.json(url.endsWith('/sessions')?{id:'round-1',seed:42}:{saved:true,score:1});
     }
   });
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/ranking.js'),'utf8'),context);
-  return {context,get,storage,requests,offline:()=>{failSave=true;},online:()=>{failSave=false;},run:code=>vm.runInContext(code,context)};
+  return {context,get,storage,requests,ranking:data=>{ranking=data;},delayRanking:promise=>{rankingWait=promise;},offline:()=>{failSave=true;},online:()=>{failSave=false;},run:code=>vm.runInContext(code,context)};
 }
 test('apelido é validado e salvo junto de uma identidade aleatória',async()=>{
   const ui=setup();await settle();
@@ -32,6 +34,29 @@ test('apelido é validado e salvo junto de uma identidade aleatória',async()=>{
   assert.equal(profile.nickname,'Amigo 1');
   assert.match(profile.token,/^[a-f0-9-]{36}$/);
   assert.equal(ui.get('nickname').value,'Amigo 1');
+});
+
+test('tela final usa melhor resultado e meta para ultrapassar rival empatado',async()=>{
+  const ui=setup();await settle();
+  ui.ranking({entries:[],personal:{position:12,score:5},rival:{nickname:'Amigo',score:5}});
+  ui.run("RankingClient.finish({round:{id:'round-final'},profile:RankingClient.profile('Jogador'),moves:['RIGHT'],difficulty:'hard'},2)");
+  await settle();await settle();await settle();
+  assert.match(ui.get('finalPosition').textContent,/12º lugar.*5 pts/);
+  assert.match(ui.get('nextRival').textContent,/Meta: 6 pts.*1 acima/);
+  assert.ok(ui.requests.some(r=>r.url.includes('difficulty=hard')));
+  assert.equal(ui.get('finalStanding').hidden,false);
+});
+
+test('resposta de ranking antiga não altera a próxima partida',async()=>{
+  const ui=setup();await settle();await settle();
+  let release;ui.delayRanking(new Promise(resolve=>{release=resolve;}));
+  ui.ranking({entries:[],personal:{position:1,score:20},rival:null});
+  ui.run("RankingClient.finish({round:{id:'old'},difficulty:'normal'},0)");
+  await settle();
+  ui.run("RankingClient.begin({id:'new'})");
+  ui.get('finalPosition').textContent='Próxima partida';
+  release();await settle();await settle();
+  assert.equal(ui.get('finalPosition').textContent,'Próxima partida');
 });
 test('ranking escreve apelidos como texto e carrega o nível selecionado',async()=>{
   const ui=setup();await settle();await settle();

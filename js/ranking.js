@@ -12,6 +12,20 @@ const RankingClient = (() => {
   let loading = 0;
   let saving = false;
   let latestRound;
+  let finalResult;
+  function standingUnavailable(text) {
+    $('finalPosition').textContent = text;
+    $('nextRival').textContent = '';
+  }
+  async function showStanding(result) {
+    try {
+      if (!publicId) await identify();
+      const data = await request(`/ranking?difficulty=${result.difficulty}&player=${publicId}`);
+      if (finalResult !== result) return;
+      $('finalPosition').textContent = data.personal ? `${data.personal.position}º lugar · Melhor: ${data.personal.score} pts` : 'Você ainda não tem pontos neste ritmo.';
+      $('nextRival').textContent = data.rival && data.personal ? `Próximo: ${data.rival.nickname} (${data.rival.score} pts). Meta: ${data.rival.score + 1} pts — ${data.rival.score - data.personal.score + 1} acima do seu melhor.` : data.personal ? 'Você está no topo! Quem vai superar seu recorde?' : 'Faça pelo menos 1 ponto e finalize a partida para entrar.';
+    } catch { if (finalResult === result) standingUnavailable('Ranking indisponível. Seu recorde local foi mantido.'); }
+  }
   try { currentProfile = JSON.parse(localStorage.getItem(profileKey)); } catch {}
   if (!currentProfile || !/^[a-f0-9-]{36}$/.test(currentProfile.token)) currentProfile = {nickname:'',token:crypto.randomUUID()};
   $('nickname').value = currentProfile.nickname || '';
@@ -84,23 +98,29 @@ const RankingClient = (() => {
       await request('/scores',attempt);
       clearPending(roundId);
       message('Resultado salvo no ranking online!');
+      if (finalResult?.roundId === roundId) await showStanding(finalResult);
       await refresh();
     } catch(error) {
       if (error.status && error.status < 500 && error.status !== 429) {
         clearPending(roundId);
         message(error.status === 409 ? 'Resultado já enviado ou partida expirada. Seu recorde continua neste aparelho.' : error.message);
+        if (finalResult?.roundId === roundId) await showStanding(finalResult);
       } else {
         message('Não foi possível salvar online. Seu recorde local foi mantido; tente novamente.');
-        $('retryScore').hidden = false;
+        if (finalResult || !latestRound) $('retryScore').hidden = false;
+        if (finalResult?.roundId === roundId) standingUnavailable('Resultado aguardando envio. Tente salvar para atualizar sua posição.');
       }
     } finally { saving = false; }
     if (pending.length && pending[0].runId !== roundId) retry();
   }
   function finish(context, score) {
     latestRound = context.round?.id || 'offline';
-    if (!score) { $('saveStatus').textContent = 'Faça pelo menos 1 ponto para entrar no ranking.'; return; }
-    if (!context.round) { $('saveStatus').textContent = 'Partida offline: recorde salvo apenas neste aparelho.'; return; }
-    if (context.moves.length > 24000) { $('saveStatus').textContent = 'Partida longa demais para o ranking. Recorde salvo neste aparelho.'; return; }
+    finalResult = {roundId:latestRound,difficulty:context.difficulty};
+    $('finalStanding').hidden = false;
+    standingUnavailable('Atualizando sua posição…');
+    if (!score) { $('saveStatus').textContent = 'Faça pelo menos 1 ponto para entrar no ranking.'; showStanding(finalResult); return; }
+    if (!context.round) { $('saveStatus').textContent = 'Partida offline: recorde salvo apenas neste aparelho.'; standingUnavailable('Partida offline. Posição online não atualizada.'); return; }
+    if (context.moves.length > 24000) { $('saveStatus').textContent = 'Partida longa demais para o ranking. Recorde salvo neste aparelho.'; showStanding(finalResult); return; }
     pending.push({runId:context.round.id,playerToken:context.profile.token,nickname:context.profile.nickname,moves:context.moves.map(move=>moveCode[move]).join('')});
     remember(pendingKey,pending);
     retry();
@@ -108,9 +128,9 @@ const RankingClient = (() => {
   $('refreshRanking').addEventListener('click',refresh);
   $('difficulty').addEventListener('change',refresh);
   $('retryScore').addEventListener('click',retry);
-  $('back').addEventListener('click',refresh);
+  $('back').addEventListener('click',()=>{ finalResult = null; refresh(); });
   window.addEventListener('online',() => { refresh(); retry(); });
   refresh();
   if (pending.length) retry();
-  return {profile,startRound,finish,refresh,begin:round => { latestRound = round?.id || 'offline'; }};
+  return {profile,startRound,finish,refresh,begin:round => { finalResult = null; latestRound = round?.id || 'offline'; }};
 })();

@@ -52,7 +52,8 @@ export default {
           env.DB.prepare(`SELECT * FROM (${ranked}) LIMIT 10`).bind(level).all(),
           /^[a-f0-9]{16}$/.test(personal) ? env.DB.prepare(`SELECT * FROM (${ranked}) WHERE id=?`).bind(level,personal).first() : null
         ]);
-        return json({entries:top.results,personal:me});
+        const rival = me?.position > 1 ? await env.DB.prepare(`SELECT * FROM (${ranked}) WHERE position=?`).bind(level,me.position-1).first() : null;
+        return json({entries:top.results,personal:me,rival});
       }
       if (request.method !== 'POST' || !['/sessions','/scores'].includes(url.pathname)) return json({error:'Rota não encontrada.'},404);
       if (!(request.headers.get('Content-Type') || '').includes('application/json')) return json({error:'Envie JSON.'},415);
